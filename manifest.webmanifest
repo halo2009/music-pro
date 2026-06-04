@@ -1,0 +1,18 @@
+{
+  "name": "스케일 암기 훈련",
+  "short_name": "스케일 훈련",
+  "description": "스케일 전체 쓰기, 부분 맞추기, 차트, 5도권을 연습하는 음악 훈련 앱",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#f4f1ea",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
