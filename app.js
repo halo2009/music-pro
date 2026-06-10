@@ -189,6 +189,7 @@ const els = {
   quizHint: document.querySelector("#quizHint"),
   answerSlots: document.querySelector("#answerSlots"),
   answerInput: document.querySelector("#answerInput"),
+  notePad: document.querySelector("#notePad"),
   feedback: document.querySelector("#feedback"),
   checkButton: document.querySelector("#checkButton"),
   nextButton: document.querySelector("#nextButton"),
@@ -303,7 +304,6 @@ function makeQuestion() {
   els.answerInput.placeholder = mode === "full" ? "예: C D E F G A B C" : "빈칸 음 하나만 입력";
   renderSlots(item.notes, blankIndex, item.scale.degrees, mode);
   hideFeedback();
-  els.answerInput.focus();
 }
 
 function renderSlots(notes, blankIndex, degrees, mode) {
@@ -317,6 +317,39 @@ function renderSlots(notes, blankIndex, degrees, mode) {
     slot.textContent = isBlank ? degrees[index] || "?" : note;
     els.answerSlots.append(slot);
   });
+}
+
+function getAnswerTokens() {
+  return els.answerInput.value.trim().split(/\s+/).filter(Boolean);
+}
+
+function setAnswerTokens(tokens) {
+  els.answerInput.value = tokens.join(" ");
+}
+
+function addNote(note) {
+  const tokens = getAnswerTokens();
+  tokens.push(note);
+  setAnswerTokens(tokens);
+}
+
+function addAccidental(accidental) {
+  const tokens = getAnswerTokens();
+  if (!tokens.length) return;
+  const last = tokens[tokens.length - 1];
+  if (!/^[A-G](?:#|b)*$/i.test(last)) return;
+  tokens[tokens.length - 1] = `${last[0].toUpperCase()}${accidental}`;
+  setAnswerTokens(tokens);
+}
+
+function editNotePad(action) {
+  if (action === "clear") {
+    els.answerInput.value = "";
+    return;
+  }
+  const tokens = getAnswerTokens();
+  tokens.pop();
+  setAnswerTokens(tokens);
 }
 
 function checkAnswer() {
@@ -436,6 +469,13 @@ els.chartScale.addEventListener("change", renderScaleChart);
 els.checkButton.addEventListener("click", checkAnswer);
 els.nextButton.addEventListener("click", nextQuestion);
 els.shuffleButton.addEventListener("click", buildDeck);
+els.notePad.addEventListener("click", (event) => {
+  const button = event.target.closest("button");
+  if (!button) return;
+  if (button.dataset.note) addNote(button.dataset.note);
+  if (button.dataset.accidental) addAccidental(button.dataset.accidental);
+  if (button.dataset.padAction) editNotePad(button.dataset.padAction);
+});
 els.answerInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") checkAnswer();
 });

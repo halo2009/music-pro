@@ -219,6 +219,44 @@ select,
   display: none;
 }
 
+.note-pad {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(34px, 1fr));
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.note-pad button {
+  min-height: 38px;
+  border-radius: 7px;
+  background: var(--soft-blue);
+  color: var(--blue);
+  font-size: 15px;
+  font-weight: 950;
+  box-shadow: inset 0 0 0 1px rgba(34, 92, 159, 0.12);
+  touch-action: manipulation;
+}
+
+.note-pad button:active {
+  transform: translateY(1px);
+  background: #d8e4f3;
+}
+
+.note-pad .accidental {
+  background: #fff7e8;
+  color: var(--amber);
+}
+
+.note-pad .pad-action {
+  background: #edf0ed;
+  color: var(--ink);
+}
+
+.note-pad .clear {
+  grid-column: span 3;
+  font-size: 13px;
+}
+
 .slot {
   min-height: 52px;
   border-radius: 8px;
@@ -419,6 +457,10 @@ select,
 
   .answer-slots {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .note-pad {
+    gap: 6px;
   }
 }
 
