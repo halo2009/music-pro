@@ -1,6 +1,8 @@
 const rootsCircle = ["C", "G", "D", "A", "E", "B", "F#", "C#", "F", "Bb", "Eb", "Ab", "Db", "Gb", "Cb"];
 const commonRoots = ["C", "G", "D", "A", "E", "F", "Bb", "Eb", "Ab"];
 const allRoots = ["C", "C#", "Db", "D", "D#", "Eb", "E", "F", "F#", "Gb", "G", "G#", "Ab", "A", "A#", "Bb", "B", "Cb"];
+const easyRoots = ["C", "G", "D", "F", "A", "E", "Bb"];
+const normalScaleIds = new Set(["major", "naturalMinor", "harmonicMinor", "melodicMinor", "majorPentatonic", "minorPentatonic", "blues"]);
 
 const sharpChromatic = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 const flatChromatic = ["C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"];
@@ -31,6 +33,21 @@ const keySignatures = {
   Gb: "Bb, Eb, Ab, Db, Gb, Cb",
   Cb: "Bb, Eb, Ab, Db, Gb, Cb, Fb",
 };
+
+const circleOfFifths = [
+  { major: "C", minor: "Am", signature: "샵/플랫 없음" },
+  { major: "G", minor: "Em", signature: "F#" },
+  { major: "D", minor: "Bm", signature: "F#, C#" },
+  { major: "A", minor: "F#m", signature: "F#, C#, G#" },
+  { major: "E", minor: "C#m", signature: "F#, C#, G#, D#" },
+  { major: "B / Cb", minor: "G#m / Abm", signature: "5# / 7b" },
+  { major: "F# / Gb", minor: "D#m / Ebm", signature: "6# / 6b" },
+  { major: "C# / Db", minor: "A#m / Bbm", signature: "7# / 5b" },
+  { major: "Ab", minor: "Fm", signature: "Bb, Eb, Ab, Db" },
+  { major: "Eb", minor: "Cm", signature: "Bb, Eb, Ab" },
+  { major: "Bb", minor: "Gm", signature: "Bb, Eb" },
+  { major: "F", minor: "Dm", signature: "Bb" },
+];
 
 const scaleTypes = [
   {
@@ -165,6 +182,313 @@ const scaleTypes = [
   },
 ];
 
+const harmonyQuestions = [
+  {
+    level: "easy",
+    topic: "다이아토닉",
+    prompt: "C Major에서 I 코드는 무엇인가요?",
+    answers: ["C", "Dm", "G", "Am"],
+    correct: "C",
+    explain: "C Major의 1도 음은 C이므로 I 코드는 C입니다.",
+  },
+  {
+    level: "easy",
+    topic: "다이아토닉",
+    prompt: "Major Key의 다이아토닉 3화음 순서는 무엇인가요?",
+    answers: ["I ii iii IV V vi vii°", "i ii° III iv v VI VII", "I iii ii V IV vi vii°", "I IV V ii iii vi vii°"],
+    correct: "I ii iii IV V vi vii°",
+    explain: "메이저 키 3화음은 메이저, 마이너, 마이너, 메이저, 메이저, 마이너, 디미니쉬 순서입니다.",
+  },
+  {
+    level: "easy",
+    topic: "다이아토닉",
+    prompt: "C Major에서 V 코드는 무엇인가요?",
+    answers: ["G", "F", "Am", "Bdim"],
+    correct: "G",
+    explain: "C Major의 5도 음은 G이므로 V 코드는 G입니다.",
+  },
+  {
+    level: "easy",
+    topic: "코드 구성",
+    prompt: "메이저 코드의 구성 공식은 무엇인가요?",
+    answers: ["1-3-5", "1-b3-5", "1-4-5", "1-3-b5"],
+    correct: "1-3-5",
+    explain: "메이저 코드는 근음, 장3도, 완전5도로 이루어집니다.",
+  },
+  {
+    level: "easy",
+    topic: "코드 구성",
+    prompt: "마이너 코드의 구성 공식은 무엇인가요?",
+    answers: ["1-b3-5", "1-3-5", "1-3-b5", "1-4-5"],
+    correct: "1-b3-5",
+    explain: "마이너 코드는 근음, 단3도, 완전5도로 이루어집니다.",
+  },
+  {
+    level: "normal",
+    topic: "7th 코드",
+    prompt: "G7의 구성음은 무엇인가요?",
+    answers: ["G B D F", "G Bb D F", "G B D F#", "G C D F"],
+    correct: "G B D F",
+    explain: "도미넌트7은 1-3-5-b7입니다. G7은 G, B, D, F입니다.",
+  },
+  {
+    level: "normal",
+    topic: "7th 코드",
+    prompt: "Cmaj7의 구성음은 무엇인가요?",
+    answers: ["C E G B", "C Eb G Bb", "C E G Bb", "C F G B"],
+    correct: "C E G B",
+    explain: "maj7 코드는 1-3-5-7입니다. Cmaj7은 C, E, G, B입니다.",
+  },
+  {
+    level: "normal",
+    topic: "7th 코드",
+    prompt: "Am7의 구성음은 무엇인가요?",
+    answers: ["A C E G", "A C# E G", "A C E G#", "A D E G"],
+    correct: "A C E G",
+    explain: "m7 코드는 1-b3-5-b7입니다. Am7은 A, C, E, G입니다.",
+  },
+  {
+    level: "normal",
+    topic: "관계조",
+    prompt: "C Major의 관계단조는 무엇인가요?",
+    answers: ["A Minor", "C Minor", "G Minor", "F Minor"],
+    correct: "A Minor",
+    explain: "메이저 키에서 6번째 음부터 시작하면 관계단조가 됩니다. C Major의 vi는 A Minor입니다.",
+  },
+  {
+    level: "normal",
+    topic: "조표",
+    prompt: "D Major의 조표에 들어가는 샵은 무엇인가요?",
+    answers: ["F#, C#", "F#", "F#, C#, G#", "Bb, Eb"],
+    correct: "F#, C#",
+    explain: "D Major는 샵 2개 키입니다. 조표는 F#, C#입니다.",
+  },
+  {
+    level: "normal",
+    topic: "조표",
+    prompt: "Bb Major의 조표에 들어가는 플랫은 무엇인가요?",
+    answers: ["Bb, Eb", "Bb", "Bb, Eb, Ab", "F#, C#"],
+    correct: "Bb, Eb",
+    explain: "Bb Major는 플랫 2개 키입니다. 조표는 Bb, Eb입니다.",
+  },
+  {
+    level: "normal",
+    topic: "모드",
+    prompt: "D Dorian은 어떤 메이저 스케일과 같은 음을 쓰나요?",
+    answers: ["C Major", "D Major", "F Major", "G Major"],
+    correct: "C Major",
+    explain: "도리안은 메이저 스케일의 2번째 모드입니다. C Major를 D부터 보면 D Dorian입니다.",
+  },
+  {
+    level: "normal",
+    topic: "모드",
+    prompt: "G Mixolydian은 어떤 메이저 스케일과 같은 음을 쓰나요?",
+    answers: ["C Major", "G Major", "D Major", "F Major"],
+    correct: "C Major",
+    explain: "믹솔리디안은 메이저 스케일의 5번째 모드입니다. C Major를 G부터 보면 G Mixolydian입니다.",
+  },
+  {
+    level: "hard",
+    topic: "세컨더리 도미넌트",
+    prompt: "C Major에서 V/V는 어떤 코드인가요?",
+    answers: ["D", "G", "Am", "F"],
+    correct: "D",
+    explain: "C Major의 V는 G이고, G의 V는 D입니다. 7th까지 쓰면 D7입니다.",
+  },
+  {
+    level: "hard",
+    topic: "텐션",
+    prompt: "Cmaj7에서 9th 텐션은 어떤 음인가요?",
+    answers: ["D", "F", "Bb", "Ab"],
+    correct: "D",
+    explain: "9th는 2도를 한 옥타브 위로 본 음입니다. C 기준 9th는 D입니다.",
+  },
+  {
+    level: "hard",
+    topic: "텐션",
+    prompt: "G7에서 13th 텐션은 어떤 음인가요?",
+    answers: ["E", "A", "C", "F"],
+    correct: "E",
+    explain: "13th는 6도를 한 옥타브 위로 본 음입니다. G 기준 13th는 E입니다.",
+  },
+  {
+    level: "hard",
+    topic: "텐션",
+    prompt: "Dm7에서 11th 텐션은 어떤 음인가요?",
+    answers: ["G", "E", "B", "Ab"],
+    correct: "G",
+    explain: "11th는 4도를 한 옥타브 위로 본 음입니다. D 기준 11th는 G입니다.",
+  },
+  {
+    level: "hard",
+    topic: "트라이톤",
+    prompt: "G7의 3음과 b7음은 무엇인가요?",
+    answers: ["B-F", "G-D", "G-B", "D-F"],
+    correct: "B-F",
+    explain: "G7은 G, B, D, F입니다. 3음은 B, b7음은 F입니다.",
+  },
+  {
+    level: "hard",
+    topic: "코드 구성",
+    prompt: "Cdim7의 구성음은 무엇인가요?",
+    answers: ["C Eb Gb Bbb", "C Eb G Bb", "C E Gb Bb", "C Eb Gb Bb"],
+    correct: "C Eb Gb Bbb",
+    explain: "dim7 공식은 1-b3-b5-bb7입니다. Cdim7은 C, Eb, Gb, Bbb입니다.",
+  },
+  {
+    level: "hard",
+    topic: "하프 디미니쉬",
+    prompt: "Bm7b5의 구성 공식은 무엇인가요?",
+    answers: ["1-b3-b5-b7", "1-b3-5-b7", "1-3-b5-b7", "1-b3-b5-bb7"],
+    correct: "1-b3-b5-b7",
+    explain: "m7b5는 하프 디미니쉬 코드입니다. 디미니쉬 3화음에 단7도를 더합니다.",
+  },
+  {
+    level: "easy",
+    topic: "조표",
+    prompt: "G Major의 조표에 들어가는 샵은 무엇인가요?",
+    answers: ["F#", "C#", "Bb", "F#, C#"],
+    correct: "F#",
+    explain: "G Major는 샵 1개 키입니다. 조표는 F#입니다.",
+  },
+  {
+    level: "easy",
+    topic: "조표",
+    prompt: "F Major의 조표에 들어가는 플랫은 무엇인가요?",
+    answers: ["Bb", "Eb", "Bb, Eb", "F#"],
+    correct: "Bb",
+    explain: "F Major는 플랫 1개 키입니다. 조표는 Bb입니다.",
+  },
+  {
+    level: "easy",
+    topic: "코드 구성",
+    prompt: "C 코드의 구성음은 무엇인가요?",
+    answers: ["C E G", "C Eb G", "C F G", "C E Bb"],
+    correct: "C E G",
+    explain: "메이저 코드는 1-3-5입니다. C 코드는 C, E, G입니다.",
+  },
+  {
+    level: "easy",
+    topic: "코드 구성",
+    prompt: "Dm 코드의 구성음은 무엇인가요?",
+    answers: ["D F A", "D F# A", "D G A", "D F C"],
+    correct: "D F A",
+    explain: "마이너 코드는 1-b3-5입니다. Dm은 D, F, A입니다.",
+  },
+  {
+    level: "easy",
+    topic: "다이아토닉",
+    prompt: "G Major에서 vi 코드는 무엇인가요?",
+    answers: ["Em", "Am", "Bm", "D"],
+    correct: "Em",
+    explain: "G Major의 6도 음은 E이고, vi는 마이너 코드라 Em입니다.",
+  },
+  {
+    level: "normal",
+    topic: "코드 구성",
+    prompt: "Dmaj7의 구성음은 무엇인가요?",
+    answers: ["D F# A C#", "D F A C", "D F# A C", "D G A C#"],
+    correct: "D F# A C#",
+    explain: "maj7 코드는 1-3-5-7입니다. Dmaj7은 D, F#, A, C#입니다.",
+  },
+  {
+    level: "normal",
+    topic: "코드 구성",
+    prompt: "Em7의 구성음은 무엇인가요?",
+    answers: ["E G B D", "E G# B D", "E G B D#", "E A B D"],
+    correct: "E G B D",
+    explain: "m7 코드는 1-b3-5-b7입니다. Em7은 E, G, B, D입니다.",
+  },
+  {
+    level: "normal",
+    topic: "코드 구성",
+    prompt: "A7의 구성음은 무엇인가요?",
+    answers: ["A C# E G", "A C E G", "A C# E G#", "A D E G"],
+    correct: "A C# E G",
+    explain: "도미넌트7은 1-3-5-b7입니다. A7은 A, C#, E, G입니다.",
+  },
+  {
+    level: "normal",
+    topic: "조표",
+    prompt: "A Major의 조표에 들어가는 샵은 무엇인가요?",
+    answers: ["F#, C#, G#", "F#, C#", "F#, C#, G#, D#", "Bb, Eb, Ab"],
+    correct: "F#, C#, G#",
+    explain: "A Major는 샵 3개 키입니다. 조표는 F#, C#, G#입니다.",
+  },
+  {
+    level: "normal",
+    topic: "조표",
+    prompt: "Eb Major의 조표에 들어가는 플랫은 무엇인가요?",
+    answers: ["Bb, Eb, Ab", "Bb, Eb", "Bb", "F#, C#, G#"],
+    correct: "Bb, Eb, Ab",
+    explain: "Eb Major는 플랫 3개 키입니다. 조표는 Bb, Eb, Ab입니다.",
+  },
+  {
+    level: "normal",
+    topic: "텐션",
+    prompt: "C 코드에서 9th는 어떤 음인가요?",
+    answers: ["D", "F", "A", "Bb"],
+    correct: "D",
+    explain: "9th는 2도를 한 옥타브 위로 본 음입니다. C 기준 9th는 D입니다.",
+  },
+  {
+    level: "normal",
+    topic: "텐션",
+    prompt: "F 코드에서 6th는 어떤 음인가요?",
+    answers: ["D", "G", "E", "Bb"],
+    correct: "D",
+    explain: "6th는 루트에서 6번째 음입니다. F 기준 6th는 D입니다.",
+  },
+  {
+    level: "hard",
+    topic: "텐션",
+    prompt: "A7에서 b9 텐션은 어떤 음인가요?",
+    answers: ["Bb", "B", "C", "G"],
+    correct: "Bb",
+    explain: "A의 9th는 B이고 b9는 반음 낮춘 Bb입니다.",
+  },
+  {
+    level: "hard",
+    topic: "텐션",
+    prompt: "D7에서 #11 텐션은 어떤 음인가요?",
+    answers: ["G#", "G", "A", "C"],
+    correct: "G#",
+    explain: "D의 11th는 G이고 #11은 반음 올린 G#입니다.",
+  },
+  {
+    level: "hard",
+    topic: "텐션",
+    prompt: "Cmaj7에서 #11 텐션은 어떤 음인가요?",
+    answers: ["F#", "F", "G", "B"],
+    correct: "F#",
+    explain: "C의 11th는 F이고 #11은 반음 올린 F#입니다.",
+  },
+  {
+    level: "hard",
+    topic: "코드 구성",
+    prompt: "E7b9의 구성음은 무엇인가요?",
+    answers: ["E G# B D F", "E G B D F", "E G# B D F#", "E A B D F"],
+    correct: "E G# B D F",
+    explain: "E7은 E, G#, B, D이고 b9는 F입니다.",
+  },
+  {
+    level: "hard",
+    topic: "코드 구성",
+    prompt: "F#m7b5의 구성음은 무엇인가요?",
+    answers: ["F# A C E", "F# A C# E", "F# A# C E", "F# A C Eb"],
+    correct: "F# A C E",
+    explain: "m7b5 공식은 1-b3-b5-b7입니다. F#m7b5는 F#, A, C, E입니다.",
+  },
+  {
+    level: "hard",
+    topic: "세컨더리 도미넌트",
+    prompt: "G Major에서 V/vi는 어떤 코드인가요?",
+    answers: ["B", "D", "E", "A"],
+    correct: "B",
+    explain: "G Major의 vi는 Em이고, Em으로 가는 V는 B입니다. 7th까지 쓰면 B7입니다.",
+  },
+];
+
 const state = {
   view: "quiz",
   deck: [],
@@ -172,16 +496,30 @@ const state = {
   current: null,
   correct: 0,
   answered: 0,
+  hintStep: 0,
+  scaleTried: false,
+  scaleLocked: false,
+  reviewItems: loadReviewItems(),
+  harmonyDeck: [],
+  harmonyIndex: 0,
+  harmonyCurrent: null,
+  harmonyAnswered: false,
+  autoTimer: null,
+  autoInterval: null,
 };
 
 const els = {
   tabs: document.querySelectorAll("[data-view]"),
   quizView: document.querySelector("#quizView"),
+  harmonyView: document.querySelector("#harmonyView"),
+  reviewView: document.querySelector("#reviewView"),
   chartView: document.querySelector("#chartView"),
   circleView: document.querySelector("#circleView"),
   quizMode: document.querySelector("#quizMode"),
   quizScale: document.querySelector("#quizScale"),
   quizKeySet: document.querySelector("#quizKeySet"),
+  quizDifficulty: document.querySelector("#quizDifficulty"),
+  harmonyDifficulty: document.querySelector("#harmonyDifficulty"),
   chartScale: document.querySelector("#chartScale"),
   quizTypeLabel: document.querySelector("#quizTypeLabel"),
   quizProgress: document.querySelector("#quizProgress"),
@@ -192,9 +530,24 @@ const els = {
   notePad: document.querySelector("#notePad"),
   feedback: document.querySelector("#feedback"),
   checkButton: document.querySelector("#checkButton"),
+  hintButton: document.querySelector("#hintButton"),
   nextButton: document.querySelector("#nextButton"),
   shuffleButton: document.querySelector("#shuffleButton"),
+  autoNextToggle: document.querySelector("#autoNextToggle"),
+  resetScoreButton: document.querySelector("#resetScoreButton"),
   accuracy: document.querySelector("#accuracy"),
+  harmonyTopic: document.querySelector("#harmonyTopic"),
+  harmonyProgress: document.querySelector("#harmonyProgress"),
+  harmonyPrompt: document.querySelector("#harmonyPrompt"),
+  harmonyHint: document.querySelector("#harmonyHint"),
+  harmonyAnswers: document.querySelector("#harmonyAnswers"),
+  harmonyFeedback: document.querySelector("#harmonyFeedback"),
+  harmonyNextButton: document.querySelector("#harmonyNextButton"),
+  harmonyShuffleButton: document.querySelector("#harmonyShuffleButton"),
+  reviewSummary: document.querySelector("#reviewSummary"),
+  reviewList: document.querySelector("#reviewList"),
+  startReviewButton: document.querySelector("#startReviewButton"),
+  clearReviewButton: document.querySelector("#clearReviewButton"),
   scaleInfo: document.querySelector("#scaleInfo"),
   scaleChart: document.querySelector("#scaleChart"),
   circleList: document.querySelector("#circleList"),
@@ -255,6 +608,89 @@ function normalizeAnswer(value) {
     .trim();
 }
 
+function formatManualAnswer(value) {
+  return value
+    .replaceAll("♭", "b")
+    .replaceAll("＃", "#")
+    .replaceAll(",", " ")
+    .replaceAll("-", " ")
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((token) => {
+      const first = token[0]?.toUpperCase() || "";
+      const rest = token.slice(1).replaceAll("B", "b");
+      return `${first}${rest}`;
+    })
+    .join(" ");
+}
+
+function loadSettings() {
+  try {
+    return JSON.parse(localStorage.getItem("scaleTrainerSettings") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveSettings() {
+  const settings = {
+    quizMode: els.quizMode.value,
+    quizScale: els.quizScale.value,
+    quizKeySet: els.quizKeySet.value,
+    quizDifficulty: els.quizDifficulty.value,
+    harmonyDifficulty: els.harmonyDifficulty.value,
+    chartScale: els.chartScale.value,
+    autoNext: els.autoNextToggle.checked,
+  };
+  localStorage.setItem("scaleTrainerSettings", JSON.stringify(settings));
+}
+
+function applySettings() {
+  const settings = loadSettings();
+  if (settings.quizMode) els.quizMode.value = settings.quizMode;
+  if (settings.quizScale) els.quizScale.value = settings.quizScale;
+  if (settings.quizKeySet) els.quizKeySet.value = settings.quizKeySet;
+  if (settings.quizDifficulty) els.quizDifficulty.value = settings.quizDifficulty;
+  if (settings.harmonyDifficulty) els.harmonyDifficulty.value = settings.harmonyDifficulty;
+  if (settings.chartScale) els.chartScale.value = settings.chartScale;
+  if (typeof settings.autoNext === "boolean") els.autoNextToggle.checked = settings.autoNext;
+}
+
+function loadReviewItems() {
+  try {
+    return JSON.parse(localStorage.getItem("scaleTrainerReview") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveReviewItems() {
+  localStorage.setItem("scaleTrainerReview", JSON.stringify(state.reviewItems.slice(0, 40)));
+}
+
+function rememberWrongScale(item, expected) {
+  const id = `${item.root}-${item.scale.id}-${item.mode}`;
+  const nextItem = {
+    id,
+    root: item.root,
+    scaleId: item.scale.id,
+    scaleName: item.scale.name,
+    mode: item.mode,
+    expected,
+    notes: item.notes,
+    missedAt: new Date().toISOString(),
+  };
+  state.reviewItems = [nextItem, ...state.reviewItems.filter((entry) => entry.id !== id)].slice(0, 40);
+  saveReviewItems();
+  renderReview();
+}
+
+function clearReviewItems() {
+  state.reviewItems = [];
+  saveReviewItems();
+  renderReview();
+}
+
 function populateSelects() {
   scaleTypes.forEach((scale) => {
     const quizOption = new Option(`${scale.name} (${scale.korean})`, scale.id);
@@ -269,12 +705,15 @@ function getScaleById(id) {
 }
 
 function getRootsForQuiz() {
+  if (els.quizDifficulty.value === "easy") return easyRoots;
+  if (els.quizDifficulty.value === "hard") return allRoots;
   if (els.quizKeySet.value === "common") return commonRoots;
-  if (els.quizKeySet.value === "all") return allRoots;
-  return rootsCircle;
+  if (els.quizKeySet.value === "all") return allRoots.filter((root) => root !== "C#" && root !== "Cb");
+  return rootsCircle.filter((root) => root !== "C#" && root !== "Cb");
 }
 
 function buildDeck() {
+  clearAutoAdvance();
   const scale = getScaleById(els.quizScale.value);
   state.deck = getRootsForQuiz().map((root) => ({
     root,
@@ -286,12 +725,37 @@ function buildDeck() {
   makeQuestion();
 }
 
+function buildReviewDeck() {
+  clearAutoAdvance();
+  if (!state.reviewItems.length) {
+    switchView("review");
+    return;
+  }
+  state.deck = state.reviewItems.map((item) => {
+    const scale = getScaleById(item.scaleId);
+    return {
+      root: item.root,
+      scale,
+      notes: buildScale(item.root, scale),
+    };
+  });
+  state.deck = shuffle(state.deck);
+  state.index = 0;
+  els.quizMode.value = "full";
+  makeQuestion();
+  switchView("quiz");
+}
+
 function makeQuestion() {
+  clearAutoAdvance();
   if (!state.deck.length) return;
   const item = state.deck[state.index % state.deck.length];
   const mode = els.quizMode.value;
   const blankIndex = mode === "partial" ? randomInt(1, item.notes.length - 2) : -1;
   state.current = { ...item, mode, blankIndex };
+  state.hintStep = 0;
+  state.scaleTried = false;
+  state.scaleLocked = false;
   els.quizTypeLabel.textContent = mode === "full" ? "전체 쓰기" : "부분 맞추기";
   els.quizProgress.textContent = `${state.index + 1} / ${state.deck.length}`;
   els.quizPrompt.textContent = mode === "full"
@@ -301,7 +765,10 @@ function makeQuestion() {
     ? `입력 규칙: 대문자 음 이름, 샵은 #, 플랫은 b. 음 사이를 띄어쓰세요.`
     : `입력 규칙: 대문자 음 이름, 샵은 #, 플랫은 b. 빈칸 음 하나만 입력하세요.`;
   els.answerInput.value = "";
+  els.answerInput.disabled = false;
   els.answerInput.placeholder = mode === "full" ? "예: C D E F G A B C" : "빈칸 음 하나만 입력";
+  setNotePadDisabled(false);
+  els.checkButton.disabled = false;
   renderSlots(item.notes, blankIndex, item.scale.degrees, mode);
   hideFeedback();
 }
@@ -328,12 +795,14 @@ function setAnswerTokens(tokens) {
 }
 
 function addNote(note) {
+  if (state.scaleLocked) return;
   const tokens = getAnswerTokens();
   tokens.push(note);
   setAnswerTokens(tokens);
 }
 
 function addAccidental(accidental) {
+  if (state.scaleLocked) return;
   const tokens = getAnswerTokens();
   if (!tokens.length) return;
   const last = tokens[tokens.length - 1];
@@ -343,6 +812,7 @@ function addAccidental(accidental) {
 }
 
 function editNotePad(action) {
+  if (state.scaleLocked) return;
   if (action === "clear") {
     els.answerInput.value = "";
     return;
@@ -352,36 +822,111 @@ function editNotePad(action) {
   setAnswerTokens(tokens);
 }
 
-function checkAnswer() {
+function setNotePadDisabled(disabled) {
+  [...els.notePad.querySelectorAll("button")].forEach((button) => {
+    button.disabled = disabled;
+  });
+}
+
+function clearAutoAdvance() {
+  if (state.autoTimer) clearTimeout(state.autoTimer);
+  if (state.autoInterval) clearInterval(state.autoInterval);
+  state.autoTimer = null;
+  state.autoInterval = null;
+}
+
+function scheduleAutoAdvance(feedbackEl, baseText, nextHandler) {
+  clearAutoAdvance();
+  if (!els.autoNextToggle.checked) return;
+  let remaining = 3;
+  feedbackEl.classList.add("pending");
+  feedbackEl.textContent = `${baseText} ${remaining}초 뒤 다음 문제`;
+  state.autoInterval = setInterval(() => {
+    remaining -= 1;
+    if (remaining > 0) {
+      feedbackEl.textContent = `${baseText} ${remaining}초 뒤 다음 문제`;
+    }
+  }, 1000);
+  state.autoTimer = setTimeout(() => {
+    clearAutoAdvance();
+    feedbackEl.classList.remove("pending");
+    nextHandler();
+  }, 3000);
+}
+
+function resetScore() {
+  state.correct = 0;
+  state.answered = 0;
+  updateAccuracy();
+  els.feedback.classList.remove("hidden", "wrong");
+  els.feedback.classList.add("pending");
+  els.feedback.textContent = "점수를 초기화했습니다.";
+}
+
+function showScaleHint() {
   if (!state.current) return;
+  state.hintStep += 1;
+  const { root, scale, notes, mode, blankIndex } = state.current;
+  const hints = mode === "partial"
+    ? [
+        `빈칸은 ${scale.degrees[blankIndex]}음입니다.`,
+        `구조: ${scale.formula}`,
+        `전체 스케일: ${notes.join(" ")}`,
+      ]
+    : [
+        `첫 음과 끝 음은 ${root}입니다.`,
+        `구조: ${scale.formula}`,
+        `도수: ${scale.degrees.join(" - ")}`,
+      ];
+  const hint = hints[Math.min(state.hintStep - 1, hints.length - 1)];
+  els.feedback.classList.remove("hidden", "wrong");
+  els.feedback.textContent = hint;
+}
+
+function checkAnswer() {
+  if (!state.current || state.scaleLocked) return;
+  els.answerInput.value = formatManualAnswer(els.answerInput.value);
   const userAnswer = normalizeAnswer(els.answerInput.value);
   const expected = state.current.mode === "full"
     ? normalizeAnswer(state.current.notes.join(" "))
     : normalizeAnswer(state.current.notes[state.current.blankIndex]);
   const isCorrect = userAnswer === expected;
 
-  state.answered += 1;
-  if (isCorrect) state.correct += 1;
+  if (!state.scaleTried) {
+    state.answered += 1;
+    if (isCorrect) state.correct += 1;
+    if (!isCorrect) rememberWrongScale(state.current, expected);
+    state.scaleTried = true;
+  }
   updateAccuracy();
   showFeedback(isCorrect, expected);
 }
 
 function showFeedback(isCorrect, expected) {
-  els.feedback.classList.remove("hidden", "wrong");
+  els.feedback.classList.remove("hidden", "wrong", "pending");
   if (!isCorrect) els.feedback.classList.add("wrong");
   const fullScale = state.current.notes.join(" ");
-  els.feedback.textContent = isCorrect
+  const message = isCorrect
     ? `정답입니다. ${state.current.root} ${state.current.scale.name}: ${fullScale}`
     : `아쉬워요. 정답은 ${expected} 입니다. 전체 스케일: ${fullScale}`;
+  els.feedback.textContent = message;
+  if (isCorrect) {
+    state.scaleLocked = true;
+    els.answerInput.disabled = true;
+    els.checkButton.disabled = true;
+    setNotePadDisabled(true);
+    scheduleAutoAdvance(els.feedback, message, nextQuestion);
+  }
 }
 
 function hideFeedback() {
   els.feedback.classList.add("hidden");
-  els.feedback.classList.remove("wrong");
+  els.feedback.classList.remove("wrong", "pending");
   els.feedback.textContent = "";
 }
 
 function nextQuestion() {
+  clearAutoAdvance();
   state.index = (state.index + 1) % state.deck.length;
   makeQuestion();
 }
@@ -424,25 +969,123 @@ function renderScaleChart() {
 
 function renderCircle() {
   els.circleList.innerHTML = "";
-  rootsCircle.forEach((root, index) => {
-    const item = document.createElement("article");
-    item.className = "circle-item";
-    item.innerHTML = `
-      <strong>${root} Major</strong>
-      <span>${index + 1}번째</span>
-      <span>조표: ${keySignatures[root] || "표기 확인"}</span>
-      <span>스케일: ${buildScale(root, scaleTypes[0]).join(" ")}</span>
+  const center = document.createElement("div");
+  center.className = "circle-center";
+  center.innerHTML = `<div><strong>5도권</strong><span>Major / minor</span></div>`;
+  els.circleList.append(center);
+  circleOfFifths.forEach((circleItem, index) => {
+    const angle = (index * 30 * Math.PI) / 180;
+    const radius = 38;
+    const x = 50 + Math.sin(angle) * radius;
+    const y = 50 - Math.cos(angle) * radius;
+    const card = document.createElement("article");
+    card.className = "circle-item";
+    card.style.left = `${x}%`;
+    card.style.top = `${y}%`;
+    card.innerHTML = `
+      <strong>${circleItem.major}</strong>
+      <span class="minor">${circleItem.minor}</span>
+      <span class="signature">${circleItem.signature}</span>
     `;
-    els.circleList.append(item);
+    els.circleList.append(card);
+  });
+}
+
+function buildHarmonyDeck() {
+  clearAutoAdvance();
+  const difficulty = els.harmonyDifficulty.value;
+  state.harmonyDeck = harmonyQuestions.filter((item) => difficulty === "all" || item.level === difficulty);
+  state.harmonyDeck = shuffle(state.harmonyDeck);
+  state.harmonyIndex = 0;
+  renderHarmonyQuestion();
+}
+
+function renderHarmonyQuestion() {
+  clearAutoAdvance();
+  if (!state.harmonyDeck.length) return;
+  const item = state.harmonyDeck[state.harmonyIndex % state.harmonyDeck.length];
+  state.harmonyCurrent = item;
+  state.harmonyAnswered = false;
+  els.harmonyTopic.textContent = item.topic;
+  els.harmonyProgress.textContent = `${state.harmonyIndex + 1} / ${state.harmonyDeck.length}`;
+  els.harmonyPrompt.textContent = item.prompt;
+  els.harmonyHint.textContent = `난이도: ${levelLabel(item.level)}`;
+  els.harmonyFeedback.classList.add("hidden");
+  els.harmonyFeedback.classList.remove("wrong", "pending");
+  els.harmonyAnswers.innerHTML = "";
+  shuffle(item.answers).forEach((answer) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = answer;
+    button.addEventListener("click", () => checkHarmonyAnswer(button, answer));
+    els.harmonyAnswers.append(button);
+  });
+}
+
+function checkHarmonyAnswer(button, answer) {
+  const item = state.harmonyCurrent;
+  if (!item || state.harmonyAnswered) return;
+  state.harmonyAnswered = true;
+  const isCorrect = answer === item.correct;
+  [...els.harmonyAnswers.children].forEach((choice) => {
+    choice.disabled = true;
+    if (choice.textContent === item.correct) choice.classList.add("correct");
+  });
+  if (!isCorrect) button.classList.add("wrong");
+  els.harmonyFeedback.classList.remove("hidden", "wrong", "pending");
+  if (!isCorrect) els.harmonyFeedback.classList.add("wrong");
+  const message = isCorrect ? `정답입니다. ${item.explain}` : `정답은 ${item.correct}. ${item.explain}`;
+  els.harmonyFeedback.textContent = message;
+  if (isCorrect) scheduleAutoAdvance(els.harmonyFeedback, message, nextHarmonyQuestion);
+}
+
+function nextHarmonyQuestion() {
+  clearAutoAdvance();
+  state.harmonyIndex = (state.harmonyIndex + 1) % state.harmonyDeck.length;
+  renderHarmonyQuestion();
+}
+
+function levelLabel(level) {
+  if (level === "easy") return "쉬움";
+  if (level === "normal") return "보통";
+  return "어려움";
+}
+
+function renderReview() {
+  const count = state.reviewItems.length;
+  els.reviewSummary.textContent = count ? `최근 틀린 스케일 ${count}개가 저장되어 있습니다.` : "틀린 스케일이 여기에 쌓입니다.";
+  els.startReviewButton.disabled = count === 0;
+  els.clearReviewButton.disabled = count === 0;
+  els.reviewList.innerHTML = "";
+  if (!count) {
+    const empty = document.createElement("article");
+    empty.className = "review-item";
+    empty.innerHTML = `<strong>아직 오답이 없습니다</strong><span>문제를 틀리면 자동으로 이곳에 저장됩니다.</span>`;
+    els.reviewList.append(empty);
+    return;
+  }
+  state.reviewItems.forEach((item) => {
+    const row = document.createElement("article");
+    row.className = "review-item";
+    row.innerHTML = `
+      <strong>${item.root} ${item.scaleName}</strong>
+      <span>정답: ${item.notes.join(" ")}</span>
+      <span>방식: ${item.mode === "full" ? "전체 쓰기" : "부분 맞추기"}</span>
+    `;
+    els.reviewList.append(row);
   });
 }
 
 function switchView(view) {
+  clearAutoAdvance();
   state.view = view;
   els.tabs.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
   els.quizView.classList.toggle("hidden", view !== "quiz");
+  els.harmonyView.classList.toggle("hidden", view !== "harmony");
+  els.reviewView.classList.toggle("hidden", view !== "review");
   els.chartView.classList.toggle("hidden", view !== "chart");
   els.circleView.classList.toggle("hidden", view !== "circle");
+  if (view === "review") renderReview();
 }
 
 function shuffle(items) {
@@ -462,13 +1105,43 @@ els.tabs.forEach((button) => {
   button.addEventListener("click", () => switchView(button.dataset.view));
 });
 
-els.quizMode.addEventListener("change", makeQuestion);
-els.quizScale.addEventListener("change", buildDeck);
-els.quizKeySet.addEventListener("change", buildDeck);
-els.chartScale.addEventListener("change", renderScaleChart);
+els.quizMode.addEventListener("change", () => {
+  saveSettings();
+  makeQuestion();
+});
+els.quizScale.addEventListener("change", () => {
+  saveSettings();
+  buildDeck();
+});
+els.quizKeySet.addEventListener("change", () => {
+  saveSettings();
+  buildDeck();
+});
+els.quizDifficulty.addEventListener("change", () => {
+  saveSettings();
+  buildDeck();
+});
+els.chartScale.addEventListener("change", () => {
+  saveSettings();
+  renderScaleChart();
+});
 els.checkButton.addEventListener("click", checkAnswer);
+els.hintButton.addEventListener("click", showScaleHint);
 els.nextButton.addEventListener("click", nextQuestion);
 els.shuffleButton.addEventListener("click", buildDeck);
+els.resetScoreButton.addEventListener("click", resetScore);
+els.autoNextToggle.addEventListener("change", () => {
+  saveSettings();
+  if (!els.autoNextToggle.checked) clearAutoAdvance();
+});
+els.harmonyDifficulty.addEventListener("change", () => {
+  saveSettings();
+  buildHarmonyDeck();
+});
+els.harmonyNextButton.addEventListener("click", nextHarmonyQuestion);
+els.harmonyShuffleButton.addEventListener("click", buildHarmonyDeck);
+els.startReviewButton.addEventListener("click", buildReviewDeck);
+els.clearReviewButton.addEventListener("click", clearReviewItems);
 els.notePad.addEventListener("click", (event) => {
   const button = event.target.closest("button");
   if (!button) return;
@@ -476,14 +1149,25 @@ els.notePad.addEventListener("click", (event) => {
   if (button.dataset.accidental) addAccidental(button.dataset.accidental);
   if (button.dataset.padAction) editNotePad(button.dataset.padAction);
 });
+els.answerInput.addEventListener("blur", () => {
+  els.answerInput.value = formatManualAnswer(els.answerInput.value);
+});
 els.answerInput.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") checkAnswer();
+  if (event.key !== "Enter") return;
+  if (state.scaleLocked) {
+    nextQuestion();
+    return;
+  }
+  checkAnswer();
 });
 
 populateSelects();
+applySettings();
 buildDeck();
+buildHarmonyDeck();
 renderScaleChart();
 renderCircle();
+renderReview();
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

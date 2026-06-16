@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=9">
 </head>
 <body>
   <main class="app">
@@ -29,6 +29,8 @@
 
     <nav class="main-tabs" aria-label="화면 선택">
       <button class="active" type="button" data-view="quiz">문제 맞추기</button>
+      <button type="button" data-view="harmony">화성학</button>
+      <button type="button" data-view="review">오답노트</button>
       <button type="button" data-view="chart">스케일 차트</button>
       <button type="button" data-view="circle">5도권</button>
     </nav>
@@ -54,6 +56,21 @@
             <option value="all">전체 키</option>
           </select>
         </label>
+        <label>
+          <span>난이도</span>
+          <select id="quizDifficulty">
+            <option value="easy">쉬움</option>
+            <option value="normal" selected>보통</option>
+            <option value="hard">어려움</option>
+          </select>
+        </label>
+      </section>
+      <section class="quick-options" aria-label="편의 설정">
+        <label class="toggle-option">
+          <input id="autoNextToggle" type="checkbox" checked>
+          <span>정답이면 3초 뒤 자동 넘기기</span>
+        </label>
+        <button id="resetScoreButton" class="mini-button" type="button">점수 초기화</button>
       </section>
 
       <section class="quiz-card" aria-live="polite">
@@ -83,8 +100,57 @@
 
       <section class="actions">
         <button id="checkButton" class="primary" type="button">확인</button>
+        <button id="hintButton" class="secondary" type="button">힌트</button>
         <button id="nextButton" class="secondary" type="button">다음 문제</button>
         <button id="shuffleButton" class="secondary" type="button">문제 섞기</button>
+      </section>
+    </section>
+
+    <section id="harmonyView" class="view hidden">
+      <section class="toolbar compact" aria-label="화성학 문제 설정">
+        <label>
+          <span>난이도</span>
+          <select id="harmonyDifficulty">
+            <option value="all">전체</option>
+            <option value="easy">쉬움</option>
+            <option value="normal">보통</option>
+            <option value="hard">어려움</option>
+          </select>
+        </label>
+      </section>
+      <section class="quick-options" aria-label="화성학 편의 설정">
+        <span class="option-note">화성학도 정답을 맞추면 자동으로 넘어갑니다.</span>
+      </section>
+
+      <section class="quiz-card" aria-live="polite">
+        <div class="quiz-meta">
+          <span id="harmonyTopic">화성학</span>
+          <span id="harmonyProgress">0 / 0</span>
+        </div>
+        <h2 id="harmonyPrompt">문제를 불러오는 중</h2>
+        <p id="harmonyHint" class="hint"></p>
+        <div id="harmonyAnswers" class="choice-grid" aria-label="화성학 답 선택"></div>
+        <div id="harmonyFeedback" class="feedback hidden"></div>
+      </section>
+
+      <section class="actions">
+        <button id="harmonyNextButton" class="primary" type="button">다음 문제</button>
+        <button id="harmonyShuffleButton" class="secondary" type="button">문제 섞기</button>
+      </section>
+    </section>
+
+    <section id="reviewView" class="view hidden">
+      <section class="circle-panel">
+        <div class="review-head">
+          <div>
+            <p class="eyebrow">Wrong Answer Review</p>
+            <h2>오답노트</h2>
+            <p id="reviewSummary" class="hint">틀린 스케일이 여기에 쌓입니다.</p>
+          </div>
+          <button id="startReviewButton" class="primary small-command" type="button">오답만 풀기</button>
+          <button id="clearReviewButton" class="secondary small-command" type="button">오답 비우기</button>
+        </div>
+        <div id="reviewList" class="review-list"></div>
       </section>
     </section>
 
@@ -112,6 +178,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
