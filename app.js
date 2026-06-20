@@ -49,6 +49,55 @@ const circleOfFifths = [
   { major: "F", minor: "Dm", signature: "Bb" },
 ];
 
+const intervalBank = [
+  { semitones: 1, name: "m2", label: "단2도" },
+  { semitones: 2, name: "M2", label: "장2도" },
+  { semitones: 3, name: "m3", label: "단3도" },
+  { semitones: 4, name: "M3", label: "장3도" },
+  { semitones: 5, name: "P4", label: "완전4도" },
+  { semitones: 6, name: "TT", label: "증4/감5도" },
+  { semitones: 7, name: "P5", label: "완전5도" },
+  { semitones: 8, name: "m6", label: "단6도" },
+  { semitones: 9, name: "M6", label: "장6도" },
+  { semitones: 10, name: "m7", label: "단7도" },
+  { semitones: 11, name: "M7", label: "장7도" },
+  { semitones: 12, name: "P8", label: "옥타브" },
+];
+
+const chordEarBank = [
+  { id: "major", label: "메이저", intervals: [0, 4, 7] },
+  { id: "minor", label: "마이너", intervals: [0, 3, 7] },
+  { id: "dim", label: "디미니쉬", intervals: [0, 3, 6] },
+  { id: "aug", label: "오그먼트", intervals: [0, 4, 8] },
+  { id: "sus4", label: "sus4", intervals: [0, 5, 7] },
+];
+
+const degreeEarBank = [
+  { degree: "1도", semitones: 0 },
+  { degree: "2도", semitones: 2 },
+  { degree: "3도", semitones: 4 },
+  { degree: "4도", semitones: 5 },
+  { degree: "5도", semitones: 7 },
+  { degree: "6도", semitones: 9 },
+  { degree: "7도", semitones: 11 },
+  { degree: "8도", semitones: 12 },
+];
+
+const noteEarBank = [
+  { label: "C", semitone: 0 },
+  { label: "C#", semitone: 1 },
+  { label: "D", semitone: 2 },
+  { label: "Eb", semitone: 3 },
+  { label: "E", semitone: 4 },
+  { label: "F", semitone: 5 },
+  { label: "F#", semitone: 6 },
+  { label: "G", semitone: 7 },
+  { label: "Ab", semitone: 8 },
+  { label: "A", semitone: 9 },
+  { label: "Bb", semitone: 10 },
+  { label: "B", semitone: 11 },
+];
+
 const scaleTypes = [
   {
     id: "major",
@@ -492,7 +541,8 @@ const harmonyQuestions = [
 const state = {
   view: "quiz",
   deck: [],
-  index: 0,
+  scaleCount: 0,
+  scaleRecent: [],
   current: null,
   correct: 0,
   answered: 0,
@@ -501,9 +551,16 @@ const state = {
   scaleLocked: false,
   reviewItems: loadReviewItems(),
   harmonyDeck: [],
-  harmonyIndex: 0,
+  harmonyCount: 0,
+  harmonyRecent: [],
   harmonyCurrent: null,
   harmonyAnswered: false,
+  earDeck: [],
+  earCount: 0,
+  earRecent: [],
+  earCurrent: null,
+  earAnswered: false,
+  audioContext: null,
   autoTimer: null,
   autoInterval: null,
 };
@@ -512,6 +569,7 @@ const els = {
   tabs: document.querySelectorAll("[data-view]"),
   quizView: document.querySelector("#quizView"),
   harmonyView: document.querySelector("#harmonyView"),
+  earView: document.querySelector("#earView"),
   reviewView: document.querySelector("#reviewView"),
   chartView: document.querySelector("#chartView"),
   circleView: document.querySelector("#circleView"),
@@ -520,6 +578,9 @@ const els = {
   quizKeySet: document.querySelector("#quizKeySet"),
   quizDifficulty: document.querySelector("#quizDifficulty"),
   harmonyDifficulty: document.querySelector("#harmonyDifficulty"),
+  earMode: document.querySelector("#earMode"),
+  earDifficulty: document.querySelector("#earDifficulty"),
+  earNoteSet: document.querySelector("#earNoteSet"),
   chartScale: document.querySelector("#chartScale"),
   quizTypeLabel: document.querySelector("#quizTypeLabel"),
   quizProgress: document.querySelector("#quizProgress"),
@@ -544,6 +605,15 @@ const els = {
   harmonyFeedback: document.querySelector("#harmonyFeedback"),
   harmonyNextButton: document.querySelector("#harmonyNextButton"),
   harmonyShuffleButton: document.querySelector("#harmonyShuffleButton"),
+  earTopic: document.querySelector("#earTopic"),
+  earProgress: document.querySelector("#earProgress"),
+  earPrompt: document.querySelector("#earPrompt"),
+  earHint: document.querySelector("#earHint"),
+  earAnswers: document.querySelector("#earAnswers"),
+  earFeedback: document.querySelector("#earFeedback"),
+  earPlayButton: document.querySelector("#earPlayButton"),
+  earNextButton: document.querySelector("#earNextButton"),
+  earShuffleButton: document.querySelector("#earShuffleButton"),
   reviewSummary: document.querySelector("#reviewSummary"),
   reviewList: document.querySelector("#reviewList"),
   startReviewButton: document.querySelector("#startReviewButton"),
@@ -639,6 +709,9 @@ function saveSettings() {
     quizKeySet: els.quizKeySet.value,
     quizDifficulty: els.quizDifficulty.value,
     harmonyDifficulty: els.harmonyDifficulty.value,
+    earMode: els.earMode.value,
+    earDifficulty: els.earDifficulty.value,
+    earNoteSet: els.earNoteSet.value,
     chartScale: els.chartScale.value,
     autoNext: els.autoNextToggle.checked,
   };
@@ -652,6 +725,9 @@ function applySettings() {
   if (settings.quizKeySet) els.quizKeySet.value = settings.quizKeySet;
   if (settings.quizDifficulty) els.quizDifficulty.value = settings.quizDifficulty;
   if (settings.harmonyDifficulty) els.harmonyDifficulty.value = settings.harmonyDifficulty;
+  if (settings.earMode) els.earMode.value = settings.earMode;
+  if (settings.earDifficulty) els.earDifficulty.value = settings.earDifficulty;
+  if (settings.earNoteSet) els.earNoteSet.value = settings.earNoteSet;
   if (settings.chartScale) els.chartScale.value = settings.chartScale;
   if (typeof settings.autoNext === "boolean") els.autoNextToggle.checked = settings.autoNext;
 }
@@ -712,6 +788,18 @@ function getRootsForQuiz() {
   return rootsCircle.filter((root) => root !== "C#" && root !== "Cb");
 }
 
+function pickRandomAvoidingRecent(pool, recent, getId) {
+  if (!pool.length) return null;
+  const blockSize = Math.min(4, Math.max(0, pool.length - 1));
+  const blocked = new Set(recent.slice(-blockSize));
+  const candidates = pool.filter((item) => !blocked.has(getId(item)));
+  const source = candidates.length ? candidates : pool;
+  const item = source[randomInt(0, source.length - 1)];
+  recent.push(getId(item));
+  if (recent.length > 12) recent.splice(0, recent.length - 12);
+  return item;
+}
+
 function buildDeck() {
   clearAutoAdvance();
   const scale = getScaleById(els.quizScale.value);
@@ -720,8 +808,8 @@ function buildDeck() {
     scale,
     notes: buildScale(root, scale),
   }));
-  state.deck = shuffle(state.deck);
-  state.index = 0;
+  state.scaleCount = 0;
+  state.scaleRecent = [];
   makeQuestion();
 }
 
@@ -739,8 +827,8 @@ function buildReviewDeck() {
       notes: buildScale(item.root, scale),
     };
   });
-  state.deck = shuffle(state.deck);
-  state.index = 0;
+  state.scaleCount = 0;
+  state.scaleRecent = [];
   els.quizMode.value = "full";
   makeQuestion();
   switchView("quiz");
@@ -749,15 +837,17 @@ function buildReviewDeck() {
 function makeQuestion() {
   clearAutoAdvance();
   if (!state.deck.length) return;
-  const item = state.deck[state.index % state.deck.length];
   const mode = els.quizMode.value;
+  const item = pickRandomAvoidingRecent(state.deck, state.scaleRecent, (entry) => `${entry.root}-${entry.scale.id}-${mode}`);
+  if (!item) return;
   const blankIndex = mode === "partial" ? randomInt(1, item.notes.length - 2) : -1;
+  state.scaleCount += 1;
   state.current = { ...item, mode, blankIndex };
   state.hintStep = 0;
   state.scaleTried = false;
   state.scaleLocked = false;
   els.quizTypeLabel.textContent = mode === "full" ? "전체 쓰기" : "부분 맞추기";
-  els.quizProgress.textContent = `${state.index + 1} / ${state.deck.length}`;
+  els.quizProgress.textContent = `랜덤 ${state.scaleCount}문제`;
   els.quizPrompt.textContent = mode === "full"
     ? `${item.root} ${item.scale.name} 스케일 전체를 쓰세요.`
     : `${item.root} ${item.scale.name} 스케일에서 빈칸 음을 맞추세요.`;
@@ -927,7 +1017,6 @@ function hideFeedback() {
 
 function nextQuestion() {
   clearAutoAdvance();
-  state.index = (state.index + 1) % state.deck.length;
   makeQuestion();
 }
 
@@ -995,19 +1084,21 @@ function buildHarmonyDeck() {
   clearAutoAdvance();
   const difficulty = els.harmonyDifficulty.value;
   state.harmonyDeck = harmonyQuestions.filter((item) => difficulty === "all" || item.level === difficulty);
-  state.harmonyDeck = shuffle(state.harmonyDeck);
-  state.harmonyIndex = 0;
+  state.harmonyCount = 0;
+  state.harmonyRecent = [];
   renderHarmonyQuestion();
 }
 
 function renderHarmonyQuestion() {
   clearAutoAdvance();
   if (!state.harmonyDeck.length) return;
-  const item = state.harmonyDeck[state.harmonyIndex % state.harmonyDeck.length];
+  const item = pickRandomAvoidingRecent(state.harmonyDeck, state.harmonyRecent, (entry) => entry.prompt);
+  if (!item) return;
+  state.harmonyCount += 1;
   state.harmonyCurrent = item;
   state.harmonyAnswered = false;
   els.harmonyTopic.textContent = item.topic;
-  els.harmonyProgress.textContent = `${state.harmonyIndex + 1} / ${state.harmonyDeck.length}`;
+  els.harmonyProgress.textContent = `랜덤 ${state.harmonyCount}문제`;
   els.harmonyPrompt.textContent = item.prompt;
   els.harmonyHint.textContent = `난이도: ${levelLabel(item.level)}`;
   els.harmonyFeedback.classList.add("hidden");
@@ -1041,8 +1132,241 @@ function checkHarmonyAnswer(button, answer) {
 
 function nextHarmonyQuestion() {
   clearAutoAdvance();
-  state.harmonyIndex = (state.harmonyIndex + 1) % state.harmonyDeck.length;
   renderHarmonyQuestion();
+}
+
+function getAudioContext() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return null;
+  if (!state.audioContext) state.audioContext = new AudioContextClass();
+  if (state.audioContext.state === "suspended") state.audioContext.resume();
+  return state.audioContext;
+}
+
+function midiToFrequency(midi) {
+  return 440 * (2 ** ((midi - 69) / 12));
+}
+
+function midiToNoteName(midi) {
+  const names = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+  const pitch = ((midi % 12) + 12) % 12;
+  const octave = Math.floor(midi / 12) - 1;
+  return `${names[pitch]}${octave}`;
+}
+
+function playTone(midi, startTime, duration = 0.42) {
+  const context = getAudioContext();
+  if (!context) return;
+  const output = context.createGain();
+  output.gain.setValueAtTime(0.0001, startTime);
+  output.gain.exponentialRampToValueAtTime(0.16, startTime + 0.018);
+  output.gain.exponentialRampToValueAtTime(0.05, startTime + duration * 0.45);
+  output.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  output.connect(context.destination);
+
+  [
+    { type: "triangle", ratio: 1, gain: 0.75 },
+    { type: "sine", ratio: 2, gain: 0.18 },
+    { type: "sine", ratio: 3, gain: 0.07 },
+  ].forEach((voice) => {
+    const oscillator = context.createOscillator();
+    const voiceGain = context.createGain();
+    oscillator.type = voice.type;
+    oscillator.frequency.value = midiToFrequency(midi) * voice.ratio;
+    voiceGain.gain.value = voice.gain;
+    oscillator.connect(voiceGain).connect(output);
+    oscillator.start(startTime);
+    oscillator.stop(startTime + duration + 0.04);
+  });
+}
+
+function playEarCurrent() {
+  const context = getAudioContext();
+  const item = state.earCurrent;
+  if (!context || !item) return;
+  const now = context.currentTime + 0.05;
+  if (item.kind === "note") {
+    playTone(item.midi, now, 0.72);
+    return;
+  }
+  if (item.kind === "interval" || item.kind === "degree") {
+    playTone(item.rootMidi, now, 0.46);
+    playTone(item.targetMidi, now + 0.62, 0.58);
+    return;
+  }
+  if (item.kind === "chord") {
+    item.notes.forEach((midi, index) => playTone(midi, now + index * 0.22, 0.34));
+    item.notes.forEach((midi) => playTone(midi, now + 0.92, 0.72));
+  }
+}
+
+function earPoolByDifficulty(kind) {
+  const difficulty = els.earDifficulty.value;
+  if (kind === "note") {
+    if (els.earNoteSet.value === "white") return noteEarBank.filter((item) => ["C", "D", "E", "F", "G", "A", "B"].includes(item.label));
+    if (els.earNoteSet.value === "black") return noteEarBank.filter((item) => ["C#", "Eb", "F#", "Ab", "Bb"].includes(item.label));
+    return noteEarBank;
+  }
+  if (kind === "interval") {
+    if (difficulty === "easy") return intervalBank.filter((item) => ["m3", "M3", "P4", "P5", "P8"].includes(item.name));
+    if (difficulty === "hard") return intervalBank;
+    return intervalBank.filter((item) => ["M2", "m3", "M3", "P4", "P5", "m6", "M6", "P8"].includes(item.name));
+  }
+  if (kind === "chord") {
+    if (difficulty === "easy") return chordEarBank.filter((item) => ["major", "minor"].includes(item.id));
+    if (difficulty === "hard") return chordEarBank;
+    return chordEarBank.filter((item) => ["major", "minor", "dim", "sus4"].includes(item.id));
+  }
+  if (difficulty === "easy") return degreeEarBank.filter((item) => ["1도", "3도", "5도", "8도"].includes(item.degree));
+  if (difficulty === "hard") return degreeEarBank;
+  return degreeEarBank.filter((item) => item.degree !== "7도");
+}
+
+function buildEarDeck() {
+  clearAutoAdvance();
+  const mode = els.earMode.value;
+  const pool = earPoolByDifficulty(mode);
+  state.earDeck = pool;
+  state.earCount = 0;
+  state.earRecent = [];
+  renderEarQuestion();
+}
+
+function makeEarQuestion(mode, pool, forcedAnswer) {
+  const rootMidi = randomInt(48, 60);
+  const answer = forcedAnswer || pool[randomInt(0, pool.length - 1)];
+  if (mode === "note") {
+    const midi = (randomInt(4, 5) + 1) * 12 + answer.semitone;
+    return {
+      kind: "note",
+      topic: "음 맞추기",
+      prompt: "들리는 음 이름을 맞추세요.",
+      hint: "한 음만 재생됩니다.",
+      midi,
+      correct: answer.label,
+      choices: pool.map((item) => item.label),
+      explain: `들린 음은 ${midiToNoteName(midi)}입니다. 답은 ${answer.label}입니다.`,
+    };
+  }
+  if (mode === "interval") {
+    const targetMidi = rootMidi + answer.semitones;
+    return {
+      kind: "interval",
+      topic: "음정",
+      prompt: "두 음 사이의 음정을 맞추세요.",
+      hint: "첫 음 뒤에 두 번째 음이 순서대로 재생됩니다.",
+      rootMidi,
+      targetMidi,
+      correct: answer.label,
+      choices: pool.map((item) => item.label),
+      explain: `${midiToNoteName(rootMidi)}에서 ${midiToNoteName(targetMidi)}까지 ${answer.label}입니다. 피아노 기준 바로 옆 건반 간격을 ${answer.semitones}칸 지난 거리입니다.`,
+    };
+  }
+  if (mode === "chord") {
+    const notes = answer.intervals.map((interval) => rootMidi + interval);
+    return {
+      kind: "chord",
+      topic: "코드 성질",
+      prompt: "들리는 코드의 성질을 맞추세요.",
+      hint: "분산화음으로 한 번, 동시에 한 번 재생됩니다.",
+      rootMidi,
+      notes,
+      correct: answer.label,
+      choices: pool.map((item) => item.label),
+      explain: `${notes.map(midiToNoteName).join(" - ")}로 들린 ${answer.label} 코드입니다.`,
+    };
+  }
+  const targetMidi = rootMidi + answer.semitones;
+  return {
+    kind: "degree",
+    topic: "스케일 도수",
+    prompt: "기준음 다음에 들리는 음의 도수를 맞추세요.",
+    hint: "Major scale 기준입니다.",
+    rootMidi,
+    targetMidi,
+    correct: answer.degree,
+    choices: pool.map((item) => item.degree),
+    explain: `${midiToNoteName(rootMidi)} Major 기준 ${midiToNoteName(targetMidi)}는 ${answer.degree}입니다.`,
+  };
+}
+
+function makeChoices(labels, correct) {
+  const rest = shuffle(labels.filter((label) => label !== correct)).slice(0, 3);
+  return shuffle([correct, ...rest]);
+}
+
+function renderEarQuestion() {
+  clearAutoAdvance();
+  if (!state.earDeck.length) return;
+  const mode = els.earMode.value;
+  const answer = pickRandomAvoidingRecent(state.earDeck, state.earRecent, (entry) => entry.label || entry.degree);
+  if (!answer) return;
+  const item = makeEarQuestion(mode, state.earDeck, answer);
+  state.earCount += 1;
+  state.earCurrent = item;
+  state.earAnswered = false;
+  els.earTopic.textContent = item.topic;
+  els.earProgress.textContent = `랜덤 ${state.earCount}문제`;
+  els.earPrompt.textContent = item.prompt;
+  els.earHint.textContent = item.hint;
+  els.earFeedback.classList.add("hidden");
+  els.earFeedback.classList.remove("wrong", "pending");
+  els.earAnswers.innerHTML = "";
+  els.earAnswers.classList.toggle("piano-grid", item.kind === "note");
+  item.choices.forEach((choice) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = choice;
+    if (item.kind === "note") {
+      button.classList.add("piano-key", isWhiteKey(choice) ? "white-key" : "black-key");
+      button.style.setProperty("--key-pos", String(noteKeyPosition(choice)));
+    }
+    button.addEventListener("click", () => checkEarAnswer(button, choice));
+    els.earAnswers.append(button);
+  });
+}
+
+function isWhiteKey(note) {
+  return ["C", "D", "E", "F", "G", "A", "B"].includes(note);
+}
+
+function noteKeyPosition(note) {
+  return {
+    C: 1,
+    "C#": 2,
+    D: 3,
+    Eb: 4,
+    E: 5,
+    F: 6,
+    "F#": 7,
+    G: 8,
+    Ab: 9,
+    A: 10,
+    Bb: 11,
+    B: 12,
+  }[note] || 1;
+}
+
+function checkEarAnswer(button, answer) {
+  const item = state.earCurrent;
+  if (!item || state.earAnswered) return;
+  state.earAnswered = true;
+  const isCorrect = answer === item.correct;
+  [...els.earAnswers.children].forEach((choice) => {
+    choice.disabled = true;
+    if (choice.textContent === item.correct) choice.classList.add("correct");
+  });
+  if (!isCorrect) button.classList.add("wrong");
+  els.earFeedback.classList.remove("hidden", "wrong", "pending");
+  if (!isCorrect) els.earFeedback.classList.add("wrong");
+  const message = isCorrect ? `정답입니다. ${item.explain}` : `정답은 ${item.correct}. ${item.explain}`;
+  els.earFeedback.textContent = message;
+  if (isCorrect) scheduleAutoAdvance(els.earFeedback, message, nextEarQuestion);
+}
+
+function nextEarQuestion() {
+  clearAutoAdvance();
+  renderEarQuestion();
 }
 
 function levelLabel(level) {
@@ -1082,6 +1406,7 @@ function switchView(view) {
   els.tabs.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
   els.quizView.classList.toggle("hidden", view !== "quiz");
   els.harmonyView.classList.toggle("hidden", view !== "harmony");
+  els.earView.classList.toggle("hidden", view !== "ear");
   els.reviewView.classList.toggle("hidden", view !== "review");
   els.chartView.classList.toggle("hidden", view !== "chart");
   els.circleView.classList.toggle("hidden", view !== "circle");
@@ -1140,6 +1465,21 @@ els.harmonyDifficulty.addEventListener("change", () => {
 });
 els.harmonyNextButton.addEventListener("click", nextHarmonyQuestion);
 els.harmonyShuffleButton.addEventListener("click", buildHarmonyDeck);
+els.earMode.addEventListener("change", () => {
+  saveSettings();
+  buildEarDeck();
+});
+els.earDifficulty.addEventListener("change", () => {
+  saveSettings();
+  buildEarDeck();
+});
+els.earNoteSet.addEventListener("change", () => {
+  saveSettings();
+  buildEarDeck();
+});
+els.earPlayButton.addEventListener("click", playEarCurrent);
+els.earNextButton.addEventListener("click", nextEarQuestion);
+els.earShuffleButton.addEventListener("click", buildEarDeck);
 els.startReviewButton.addEventListener("click", buildReviewDeck);
 els.clearReviewButton.addEventListener("click", clearReviewItems);
 els.notePad.addEventListener("click", (event) => {
@@ -1165,6 +1505,7 @@ populateSelects();
 applySettings();
 buildDeck();
 buildHarmonyDeck();
+buildEarDeck();
 renderScaleChart();
 renderCircle();
 renderReview();

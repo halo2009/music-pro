@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <main class="app">
@@ -30,6 +30,7 @@
     <nav class="main-tabs" aria-label="화면 선택">
       <button class="active" type="button" data-view="quiz">문제 맞추기</button>
       <button type="button" data-view="harmony">화성학</button>
+      <button type="button" data-view="ear">음감</button>
       <button type="button" data-view="review">오답노트</button>
       <button type="button" data-view="chart">스케일 차트</button>
       <button type="button" data-view="circle">5도권</button>
@@ -139,6 +140,56 @@
       </section>
     </section>
 
+    <section id="earView" class="view hidden">
+      <section class="toolbar compact" aria-label="음감 훈련 설정">
+        <label>
+          <span>훈련</span>
+          <select id="earMode">
+            <option value="note">음 맞추기</option>
+            <option value="interval">음정</option>
+            <option value="chord">코드 성질</option>
+            <option value="degree">스케일 도수</option>
+          </select>
+        </label>
+        <label>
+          <span>난이도</span>
+          <select id="earDifficulty">
+            <option value="easy">쉬움</option>
+            <option value="normal" selected>보통</option>
+            <option value="hard">어려움</option>
+          </select>
+        </label>
+        <label>
+          <span>음 맞추기 범위</span>
+          <select id="earNoteSet">
+            <option value="all">12음 전체</option>
+            <option value="white">흰건반만</option>
+            <option value="black">검은건반만</option>
+          </select>
+        </label>
+      </section>
+      <section class="quick-options" aria-label="음감 훈련 안내">
+        <span class="option-note">재생을 누르고 들리는 답을 고르세요. iPhone에서는 첫 재생 때 소리가 켜집니다.</span>
+      </section>
+
+      <section class="quiz-card" aria-live="polite">
+        <div class="quiz-meta">
+          <span id="earTopic">음감</span>
+          <span id="earProgress">0 / 0</span>
+        </div>
+        <h2 id="earPrompt">소리를 듣고 맞추세요</h2>
+        <p id="earHint" class="hint"></p>
+        <div id="earAnswers" class="choice-grid ear-choice-grid" aria-label="음감 답 선택"></div>
+        <div id="earFeedback" class="feedback hidden"></div>
+      </section>
+
+      <section class="actions ear-actions">
+        <button id="earPlayButton" class="primary" type="button">재생</button>
+        <button id="earNextButton" class="secondary" type="button">다음 문제</button>
+        <button id="earShuffleButton" class="secondary" type="button">문제 섞기</button>
+      </section>
+    </section>
+
     <section id="reviewView" class="view hidden">
       <section class="circle-panel">
         <div class="review-head">
@@ -178,6 +229,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=9"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>
