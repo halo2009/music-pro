@@ -356,6 +356,15 @@ select,
   grid-template-columns: 1.2fr 1fr 1fr;
 }
 
+#earPlayButton {
+  min-height: 58px;
+  font-size: 18px;
+}
+
+#earPlayButton:disabled {
+  opacity: 0.8;
+}
+
 .primary {
   background: var(--accent);
   color: white;

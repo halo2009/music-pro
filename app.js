@@ -1135,11 +1135,11 @@ function nextHarmonyQuestion() {
   renderHarmonyQuestion();
 }
 
-function getAudioContext() {
+async function getAudioContext() {
   const AudioContextClass = window.AudioContext || window.webkitAudioContext;
   if (!AudioContextClass) return null;
   if (!state.audioContext) state.audioContext = new AudioContextClass();
-  if (state.audioContext.state === "suspended") state.audioContext.resume();
+  if (state.audioContext.state === "suspended") await state.audioContext.resume();
   return state.audioContext;
 }
 
@@ -1154,8 +1154,7 @@ function midiToNoteName(midi) {
   return `${names[pitch]}${octave}`;
 }
 
-function playTone(midi, startTime, duration = 0.42) {
-  const context = getAudioContext();
+function playTone(context, midi, startTime, duration = 0.42) {
   if (!context) return;
   const output = context.createGain();
   output.gain.setValueAtTime(0.0001, startTime);
@@ -1180,23 +1179,41 @@ function playTone(midi, startTime, duration = 0.42) {
   });
 }
 
-function playEarCurrent() {
-  const context = getAudioContext();
+async function playEarCurrent() {
+  els.earPlayButton.disabled = true;
+  els.earPlayButton.textContent = "재생 중";
+  const context = await getAudioContext();
   const item = state.earCurrent;
-  if (!context || !item) return;
+  if (!context || !item) {
+    els.earPlayButton.disabled = false;
+    els.earPlayButton.textContent = "재생";
+    return;
+  }
   const now = context.currentTime + 0.05;
   if (item.kind === "note") {
-    playTone(item.midi, now, 0.72);
+    playTone(context, item.midi, now, 0.72);
+    setTimeout(() => {
+      els.earPlayButton.disabled = false;
+      els.earPlayButton.textContent = "재생";
+    }, 850);
     return;
   }
   if (item.kind === "interval" || item.kind === "degree") {
-    playTone(item.rootMidi, now, 0.46);
-    playTone(item.targetMidi, now + 0.62, 0.58);
+    playTone(context, item.rootMidi, now, 0.46);
+    playTone(context, item.targetMidi, now + 0.62, 0.58);
+    setTimeout(() => {
+      els.earPlayButton.disabled = false;
+      els.earPlayButton.textContent = "재생";
+    }, 1300);
     return;
   }
   if (item.kind === "chord") {
-    item.notes.forEach((midi, index) => playTone(midi, now + index * 0.22, 0.34));
-    item.notes.forEach((midi) => playTone(midi, now + 0.92, 0.72));
+    item.notes.forEach((midi, index) => playTone(context, midi, now + index * 0.22, 0.34));
+    item.notes.forEach((midi) => playTone(context, midi, now + 0.92, 0.72));
+    setTimeout(() => {
+      els.earPlayButton.disabled = false;
+      els.earPlayButton.textContent = "재생";
+    }, 1800);
   }
 }
 
