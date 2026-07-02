@@ -35,18 +35,18 @@ const keySignatures = {
 };
 
 const circleOfFifths = [
-  { major: "C", minor: "Am", signature: "샵/플랫 없음" },
-  { major: "G", minor: "Em", signature: "F#" },
-  { major: "D", minor: "Bm", signature: "F#, C#" },
-  { major: "A", minor: "F#m", signature: "F#, C#, G#" },
-  { major: "E", minor: "C#m", signature: "F#, C#, G#, D#" },
-  { major: "B / Cb", minor: "G#m / Abm", signature: "5# / 7b" },
-  { major: "F# / Gb", minor: "D#m / Ebm", signature: "6# / 6b" },
-  { major: "C# / Db", minor: "A#m / Bbm", signature: "7# / 5b" },
-  { major: "Ab", minor: "Fm", signature: "Bb, Eb, Ab, Db" },
-  { major: "Eb", minor: "Cm", signature: "Bb, Eb, Ab" },
-  { major: "Bb", minor: "Gm", signature: "Bb, Eb" },
-  { major: "F", minor: "Dm", signature: "Bb" },
+  { major: "C", minor: "Am", count: "0", type: "natural", notes: [] },
+  { major: "G", minor: "Em", count: "1#", type: "sharp", notes: ["F#"] },
+  { major: "D", minor: "Bm", count: "2#", type: "sharp", notes: ["F#", "C#"] },
+  { major: "A", minor: "F#m", count: "3#", type: "sharp", notes: ["F#", "C#", "G#"] },
+  { major: "E", minor: "C#m", count: "4#", type: "sharp", notes: ["F#", "C#", "G#", "D#"] },
+  { major: "B", minor: "G#m", count: "5#", type: "sharp", notes: ["F#", "C#", "G#", "D#", "A#"] },
+  { major: "F# / Gb", minor: "D#m / Ebm", count: "6# / 6b", type: "both", notes: ["F#", "C#", "G#", "D#", "A#", "E#"], altNotes: ["Bb", "Eb", "Ab", "Db", "Gb", "Cb"] },
+  { major: "Db", minor: "Bbm", count: "5b", type: "flat", notes: ["Bb", "Eb", "Ab", "Db", "Gb"] },
+  { major: "Ab", minor: "Fm", count: "4b", type: "flat", notes: ["Bb", "Eb", "Ab", "Db"] },
+  { major: "Eb", minor: "Cm", count: "3b", type: "flat", notes: ["Bb", "Eb", "Ab"] },
+  { major: "Bb", minor: "Gm", count: "2b", type: "flat", notes: ["Bb", "Eb"] },
+  { major: "F", minor: "Dm", count: "1b", type: "flat", notes: ["Bb"] },
 ];
 
 const intervalBank = [
@@ -97,6 +97,9 @@ const noteEarBank = [
   { label: "Bb", semitone: 10 },
   { label: "B", semitone: 11 },
 ];
+
+const guitarRoots = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+const guitarPositions = ["C", "D", "E", "G", "A"];
 
 const scaleTypes = [
   {
@@ -560,6 +563,10 @@ const state = {
   earRecent: [],
   earCurrent: null,
   earAnswered: false,
+  guitarDeck: [],
+  guitarCount: 0,
+  guitarRecent: [],
+  guitarCurrent: null,
   audioContext: null,
   autoTimer: null,
   autoInterval: null,
@@ -570,6 +577,7 @@ const els = {
   quizView: document.querySelector("#quizView"),
   harmonyView: document.querySelector("#harmonyView"),
   earView: document.querySelector("#earView"),
+  guitarView: document.querySelector("#guitarView"),
   reviewView: document.querySelector("#reviewView"),
   chartView: document.querySelector("#chartView"),
   circleView: document.querySelector("#circleView"),
@@ -614,6 +622,12 @@ const els = {
   earPlayButton: document.querySelector("#earPlayButton"),
   earNextButton: document.querySelector("#earNextButton"),
   earShuffleButton: document.querySelector("#earShuffleButton"),
+  guitarProgress: document.querySelector("#guitarProgress"),
+  guitarRoot: document.querySelector("#guitarRoot"),
+  guitarPosition: document.querySelector("#guitarPosition"),
+  guitarHint: document.querySelector("#guitarHint"),
+  guitarNextButton: document.querySelector("#guitarNextButton"),
+  guitarShuffleButton: document.querySelector("#guitarShuffleButton"),
   reviewSummary: document.querySelector("#reviewSummary"),
   reviewList: document.querySelector("#reviewList"),
   startReviewButton: document.querySelector("#startReviewButton"),
@@ -1060,7 +1074,7 @@ function renderCircle() {
   els.circleList.innerHTML = "";
   const center = document.createElement("div");
   center.className = "circle-center";
-  center.innerHTML = `<div><strong>5도권</strong><span>Major / minor</span></div>`;
+  center.innerHTML = `<div><strong>5도권</strong><span># 오른쪽<br>b 왼쪽</span></div>`;
   els.circleList.append(center);
   circleOfFifths.forEach((circleItem, index) => {
     const angle = (index * 30 * Math.PI) / 180;
@@ -1068,13 +1082,13 @@ function renderCircle() {
     const x = 50 + Math.sin(angle) * radius;
     const y = 50 - Math.cos(angle) * radius;
     const card = document.createElement("article");
-    card.className = "circle-item";
+    card.className = `circle-item ${circleItem.type}`;
     card.style.left = `${x}%`;
     card.style.top = `${y}%`;
     card.innerHTML = `
       <strong>${circleItem.major}</strong>
       <span class="minor">${circleItem.minor}</span>
-      <span class="signature">${circleItem.signature}</span>
+      <span class="signature-count">${circleItem.count}</span>
     `;
     els.circleList.append(card);
   });
@@ -1386,6 +1400,33 @@ function nextEarQuestion() {
   renderEarQuestion();
 }
 
+function buildGuitarDeck() {
+  clearAutoAdvance();
+  state.guitarDeck = guitarRoots;
+  state.guitarCount = 0;
+  state.guitarRecent = [];
+  nextGuitarPrompt();
+}
+
+function nextGuitarPrompt() {
+  clearAutoAdvance();
+  if (!state.guitarDeck.length) return;
+  const blockedRoots = new Set(state.guitarRecent.slice(-(guitarRoots.length - 1)));
+  const candidates = guitarRoots.filter((root) => !blockedRoots.has(root));
+  const source = candidates.length ? candidates : guitarRoots;
+  const root = source[randomInt(0, source.length - 1)];
+  const position = guitarPositions[randomInt(0, guitarPositions.length - 1)];
+  const item = { root, position };
+  state.guitarCurrent = item;
+  state.guitarRecent.push(root);
+  if (state.guitarRecent.length > guitarRoots.length - 1) state.guitarRecent.shift();
+  state.guitarCount += 1;
+  els.guitarProgress.textContent = `랜덤 ${state.guitarCount}문제`;
+  els.guitarRoot.textContent = item.root;
+  els.guitarPosition.textContent = item.position;
+  els.guitarHint.textContent = `${item.root} 스케일을 ${item.position} 포지션으로 잡고 연주하세요. 이 루트는 다음 한 바퀴 전까지 제외됩니다.`;
+}
+
 function levelLabel(level) {
   if (level === "easy") return "쉬움";
   if (level === "normal") return "보통";
@@ -1424,6 +1465,7 @@ function switchView(view) {
   els.quizView.classList.toggle("hidden", view !== "quiz");
   els.harmonyView.classList.toggle("hidden", view !== "harmony");
   els.earView.classList.toggle("hidden", view !== "ear");
+  els.guitarView.classList.toggle("hidden", view !== "guitar");
   els.reviewView.classList.toggle("hidden", view !== "review");
   els.chartView.classList.toggle("hidden", view !== "chart");
   els.circleView.classList.toggle("hidden", view !== "circle");
@@ -1497,6 +1539,8 @@ els.earNoteSet.addEventListener("change", () => {
 els.earPlayButton.addEventListener("click", playEarCurrent);
 els.earNextButton.addEventListener("click", nextEarQuestion);
 els.earShuffleButton.addEventListener("click", buildEarDeck);
+els.guitarNextButton.addEventListener("click", nextGuitarPrompt);
+els.guitarShuffleButton.addEventListener("click", buildGuitarDeck);
 els.startReviewButton.addEventListener("click", buildReviewDeck);
 els.clearReviewButton.addEventListener("click", clearReviewItems);
 els.notePad.addEventListener("click", (event) => {
@@ -1523,6 +1567,7 @@ applySettings();
 buildDeck();
 buildHarmonyDeck();
 buildEarDeck();
+buildGuitarDeck();
 renderScaleChart();
 renderCircle();
 renderReview();

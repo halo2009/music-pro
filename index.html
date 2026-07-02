@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=16">
+  <link rel="stylesheet" href="styles.css?v=20">
 </head>
 <body>
   <main class="app">
@@ -31,6 +31,7 @@
       <button class="active" type="button" data-view="quiz">문제 맞추기</button>
       <button type="button" data-view="harmony">화성학</button>
       <button type="button" data-view="ear">음감</button>
+      <button type="button" data-view="guitar">기타</button>
       <button type="button" data-view="review">오답노트</button>
       <button type="button" data-view="chart">스케일 차트</button>
       <button type="button" data-view="circle">5도권</button>
@@ -190,6 +191,35 @@
       </section>
     </section>
 
+    <section id="guitarView" class="view hidden">
+      <section class="quick-options" aria-label="기타 스케일 훈련 안내">
+        <span class="option-note">랜덤으로 나온 루트와 CAGED 포지션을 기타에서 바로 찾아서 치세요.</span>
+      </section>
+
+      <section class="quiz-card guitar-card" aria-live="polite">
+        <div class="quiz-meta">
+          <span>기타 스케일</span>
+          <span id="guitarProgress">랜덤 0문제</span>
+        </div>
+        <div class="guitar-prompt">
+          <article>
+            <span>루트</span>
+            <strong id="guitarRoot">C</strong>
+          </article>
+          <article>
+            <span>포지션</span>
+            <strong id="guitarPosition">C</strong>
+          </article>
+        </div>
+        <p id="guitarHint" class="hint">한 번 나온 루트는 나머지 11개 루트가 다 나오기 전까지 다시 나오지 않습니다.</p>
+      </section>
+
+      <section class="actions guitar-actions">
+        <button id="guitarNextButton" class="primary" type="button">다음 랜덤</button>
+        <button id="guitarShuffleButton" class="secondary" type="button">처음부터 섞기</button>
+      </section>
+    </section>
+
     <section id="reviewView" class="view hidden">
       <section class="circle-panel">
         <div class="review-head">
@@ -224,11 +254,21 @@
           <h2>5도권 암기표</h2>
           <p class="hint">오른쪽으로 갈수록 샵이 하나씩 늘고, 왼쪽으로 갈수록 플랫이 하나씩 늘어납니다.</p>
         </div>
+        <div class="signature-order" aria-label="조표 붙는 순서">
+          <article>
+            <strong># 붙는 순서</strong>
+            <span>F</span><span>C</span><span>G</span><span>D</span><span>A</span><span>E</span><span>B</span>
+          </article>
+          <article>
+            <strong>b 붙는 순서</strong>
+            <span>B</span><span>E</span><span>A</span><span>D</span><span>G</span><span>C</span><span>F</span>
+          </article>
+        </div>
         <div id="circleList" class="circle-list"></div>
       </section>
     </section>
   </main>
 
-  <script src="app.js?v=16"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>
