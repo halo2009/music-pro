@@ -1,9 +1,9 @@
-const CACHE_NAME = "scale-trainer-v20";
+const CACHE_NAME = "scale-trainer-v34";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./styles.css?v=20",
-  "./app.js?v=20",
+  "./styles.css?v=34",
+  "./app.js?v=34",
   "./manifest.webmanifest",
   "./icon.svg"
 ];

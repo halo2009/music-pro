@@ -100,6 +100,211 @@ const noteEarBank = [
 
 const guitarRoots = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
 const guitarPositions = ["C", "D", "E", "G", "A"];
+const chordRoots = ["C", "C#", "D", "Eb", "E", "F", "F#", "G", "Ab", "A", "Bb", "B"];
+
+const chordTypes = [
+  { id: "M", symbol: "", intervals: [0, 4, 7] },
+  { id: "m", symbol: "m", intervals: [0, 3, 7] },
+  { id: "7", symbol: "7", intervals: [0, 4, 7, 10] },
+  { id: "5", symbol: "5", intervals: [0, 7] },
+  { id: "dim", symbol: "dim", intervals: [0, 3, 6] },
+  { id: "dim7", symbol: "dim7", intervals: [0, 3, 6, 9] },
+  { id: "aug", symbol: "aug", intervals: [0, 4, 8] },
+  { id: "sus2", symbol: "sus2", intervals: [0, 2, 7] },
+  { id: "sus4", symbol: "sus4", intervals: [0, 5, 7] },
+  { id: "M7", symbol: "M7", intervals: [0, 4, 7, 11] },
+  { id: "m7", symbol: "m7", intervals: [0, 3, 7, 10] },
+  { id: "7sus4", symbol: "7sus4", intervals: [0, 5, 7, 10] },
+  { id: "M9", symbol: "M9", intervals: [0, 4, 7, 11, 14] },
+  { id: "M13", symbol: "M13", intervals: [0, 4, 7, 11, 14, 21] },
+  { id: "M9#11", symbol: "M9#11", intervals: [0, 4, 7, 11, 14, 18] },
+  { id: "M13#11", symbol: "M13#11", intervals: [0, 4, 7, 11, 14, 18, 21] },
+  { id: "add9", symbol: "add9", intervals: [0, 4, 7, 14] },
+  { id: "6add9", symbol: "6add9", intervals: [0, 4, 7, 9, 14] },
+  { id: "M7b5", symbol: "M7b5", intervals: [0, 4, 6, 11] },
+  { id: "M7#5", symbol: "M7#5", intervals: [0, 4, 8, 11] },
+  { id: "m6", symbol: "m6", intervals: [0, 3, 7, 9] },
+  { id: "m9", symbol: "m9", intervals: [0, 3, 7, 10, 14] },
+  { id: "m11", symbol: "m11", intervals: [0, 3, 7, 10, 14, 17] },
+  { id: "m13", symbol: "m13", intervals: [0, 3, 7, 10, 14, 17, 21] },
+  { id: "madd9", symbol: "madd9", intervals: [0, 3, 7, 14] },
+  { id: "mM7", symbol: "mM7", intervals: [0, 3, 7, 11] },
+  { id: "m7b5", symbol: "m7b5", intervals: [0, 3, 6, 10] },
+  { id: "m7#5", symbol: "m7#5", intervals: [0, 3, 8, 10] },
+  { id: "6", symbol: "6", intervals: [0, 4, 7, 9] },
+  { id: "9", symbol: "9", intervals: [0, 4, 7, 10, 14] },
+  { id: "11", symbol: "11", intervals: [0, 4, 7, 10, 14, 17] },
+  { id: "13", symbol: "13", intervals: [0, 4, 7, 10, 14, 17, 21] },
+  { id: "7b5", symbol: "7b5", intervals: [0, 4, 6, 10] },
+  { id: "7#5", symbol: "7#5", intervals: [0, 4, 8, 10] },
+  { id: "7b9", symbol: "7b9", intervals: [0, 4, 7, 10, 13] },
+  { id: "7#9", symbol: "7#9", intervals: [0, 4, 7, 10, 15] },
+  { id: "7(b5,b9)", symbol: "7(b5,b9)", intervals: [0, 4, 6, 10, 13] },
+  { id: "7(b5#9)", symbol: "7(b5#9)", intervals: [0, 4, 6, 10, 15] },
+  { id: "7(#5#9)", symbol: "7(#5#9)", intervals: [0, 4, 8, 10, 15] },
+  { id: "9b5", symbol: "9b5", intervals: [0, 4, 6, 10, 14] },
+  { id: "9#5", symbol: "9#5", intervals: [0, 4, 8, 10, 14] },
+  { id: "13#11", symbol: "13#11", intervals: [0, 4, 7, 10, 14, 18, 21] },
+  { id: "13b9", symbol: "13b9", intervals: [0, 4, 7, 10, 13, 21] },
+  { id: "11b9", symbol: "11b9", intervals: [0, 4, 7, 10, 13, 17] },
+  { id: "sus2sus4", symbol: "sus2sus4", intervals: [0, 2, 5, 7] },
+  { id: "-5", symbol: "-5", intervals: [0, 4, 6] },
+];
+
+const rhythmTypes = [
+  {
+    id: "quarter",
+    name: "4분음표",
+    symbol: "♩",
+    unit: "한 박에 기본 클릭",
+    feel: "메트로놈 기본 박만 듣습니다.",
+    say: "하나 둘 셋 넷",
+    subdivisions: 1,
+  },
+  {
+    id: "eighth",
+    name: "8분음표",
+    symbol: "♪♪",
+    unit: "한 박 안에 2개",
+    feel: "한 박을 둘로 고르게 나눕니다.",
+    say: "하나-앤",
+    subdivisions: 2,
+  },
+  {
+    id: "eighthTriplet",
+    name: "8분 3잇단음",
+    symbol: "♪♪♪",
+    unit: "1박 안에 3개",
+    count: "3등분",
+    feel: "한 박을 셋으로 고르게 나눕니다.",
+    say: "하나-둘-셋",
+    subdivisions: 3,
+  },
+  {
+    id: "quarterTriplet",
+    name: "4분 3잇단음",
+    symbol: "♩♩♩",
+    unit: "4분음표 2개 길이 안에 3개",
+    count: "3등분",
+    feel: "2박 길이를 셋으로 고르게 나눕니다. 중간 박 클릭 없이 3개가 같은 간격으로 들립니다.",
+    say: "하나--둘--셋",
+    subdivisions: 3,
+    spanBeats: 2,
+  },
+  {
+    id: "triplet",
+    name: "3연음",
+    symbol: "3",
+    unit: "기준 박 안에 3개",
+    count: "3등분",
+    feel: "기준 길이를 셋으로 나누는 모든 3잇단 느낌입니다.",
+    say: "타-타-타",
+    subdivisions: 3,
+  },
+  {
+    id: "quintuplet",
+    name: "5연음",
+    symbol: "5",
+    unit: "기준 박 안에 5개",
+    count: "5등분",
+    feel: "한 박 또는 정해진 길이를 다섯 칸으로 고르게 나눕니다.",
+    say: "타-타-타-타-타",
+    subdivisions: 5,
+  },
+  {
+    id: "sextuplet",
+    name: "6연음",
+    symbol: "6",
+    unit: "기준 박 안에 6개",
+    count: "6등분",
+    feel: "여섯 칸으로 고르게 나누며 3+3 또는 2+2+2로 느낄 수 있습니다.",
+    say: "타-타-타 타-타-타",
+    subdivisions: 6,
+  },
+  {
+    id: "septuplet",
+    name: "7연음",
+    symbol: "7",
+    unit: "기준 박 안에 7개",
+    count: "7등분",
+    feel: "일곱 칸으로 고르게 나누는 고난도 리듬입니다.",
+    say: "타-타-타-타-타-타-타",
+    subdivisions: 7,
+  },
+];
+
+const metronomeSounds = {
+  classic: {
+    type: "square",
+    accent: 1320,
+    beat: 980,
+    subdivision: 700,
+    accentGain: 0.22,
+    beatGain: 0.14,
+    subGain: 0.06,
+    duration: 0.045,
+  },
+  wood: {
+    type: "triangle",
+    accent: 1120,
+    beat: 760,
+    subdivision: 560,
+    accentGain: 0.28,
+    beatGain: 0.18,
+    subGain: 0.08,
+    duration: 0.035,
+  },
+  digital: {
+    type: "sine",
+    accent: 1760,
+    beat: 1320,
+    subdivision: 990,
+    accentGain: 0.2,
+    beatGain: 0.13,
+    subGain: 0.07,
+    duration: 0.06,
+  },
+  soft: {
+    type: "triangle",
+    accent: 880,
+    beat: 660,
+    subdivision: 520,
+    accentGain: 0.16,
+    beatGain: 0.1,
+    subGain: 0.045,
+    duration: 0.08,
+  },
+  rim: {
+    type: "square",
+    accent: 1480,
+    beat: 1180,
+    subdivision: 860,
+    accentGain: 0.24,
+    beatGain: 0.16,
+    subGain: 0.07,
+    duration: 0.025,
+  },
+  clave: {
+    type: "triangle",
+    accent: 980,
+    beat: 820,
+    subdivision: 640,
+    accentGain: 0.26,
+    beatGain: 0.17,
+    subGain: 0.075,
+    duration: 0.032,
+  },
+  glass: {
+    type: "sine",
+    accent: 2200,
+    beat: 1660,
+    subdivision: 1240,
+    accentGain: 0.15,
+    beatGain: 0.1,
+    subGain: 0.05,
+    duration: 0.075,
+  },
+};
 
 const scaleTypes = [
   {
@@ -567,6 +772,23 @@ const state = {
   guitarCount: 0,
   guitarRecent: [],
   guitarCurrent: null,
+  chordCurrent: null,
+  chordNext: null,
+  chordPlaying: false,
+  chordTimer: null,
+  chordBeat: 1,
+  chordCountIn: false,
+  metronomeOn: false,
+  metronomeTimer: null,
+  beatIndex: 0,
+  tapTimes: [],
+  beatModes: ["accent", "basic", "basic", "basic"],
+  beatShape: "circle",
+  visualOptions: {
+    dots: true,
+    pendulum: false,
+    flash: false,
+  },
   audioContext: null,
   autoTimer: null,
   autoInterval: null,
@@ -578,6 +800,8 @@ const els = {
   harmonyView: document.querySelector("#harmonyView"),
   earView: document.querySelector("#earView"),
   guitarView: document.querySelector("#guitarView"),
+  rhythmView: document.querySelector("#rhythmView"),
+  chordView: document.querySelector("#chordView"),
   reviewView: document.querySelector("#reviewView"),
   chartView: document.querySelector("#chartView"),
   circleView: document.querySelector("#circleView"),
@@ -628,6 +852,40 @@ const els = {
   guitarHint: document.querySelector("#guitarHint"),
   guitarNextButton: document.querySelector("#guitarNextButton"),
   guitarShuffleButton: document.querySelector("#guitarShuffleButton"),
+  chordRootSelect: document.querySelector("#chordRootSelect"),
+  chordBpmInput: document.querySelector("#chordBpmInput"),
+  chordUnitSelect: document.querySelector("#chordUnitSelect"),
+  chordChangeEverySelect: document.querySelector("#chordChangeEverySelect"),
+  chordTypeOptions: document.querySelector("#chordTypeOptions"),
+  clearChordTypesButton: document.querySelector("#clearChordTypesButton"),
+  chordPlayToggleButton: document.querySelector("#chordPlayToggleButton"),
+  chordNextNowButton: document.querySelector("#chordNextNowButton"),
+  chordCurrentDisplay: document.querySelector("#chordCurrentDisplay"),
+  chordNextDisplay: document.querySelector("#chordNextDisplay"),
+  chordBeatDisplay: document.querySelector("#chordBeatDisplay"),
+  rhythmStudyList: document.querySelector("#rhythmStudyList"),
+  meterSelect: document.querySelector("#meterSelect"),
+  rhythmPatternSelect: document.querySelector("#rhythmPatternSelect"),
+  metronomeSoundSelect: document.querySelector("#metronomeSoundSelect"),
+  beatShapeButtons: document.querySelector("#beatShapeButtons"),
+  visualToggleButtons: document.querySelector("#visualToggleButtons"),
+  autoTempoEveryInput: document.querySelector("#autoTempoEveryInput"),
+  autoTempoAmountInput: document.querySelector("#autoTempoAmountInput"),
+  tempoInput: document.querySelector("#tempoInput"),
+  tempoSlider: document.querySelector("#tempoSlider"),
+  tempoValue: document.querySelector("#tempoValue"),
+  tempoDownButton: document.querySelector("#tempoDownButton"),
+  tempoUpButton: document.querySelector("#tempoUpButton"),
+  tapTempoButton: document.querySelector("#tapTempoButton"),
+  tempoPresetButtons: document.querySelectorAll("[data-tempo-preset]"),
+  tempoStage: document.querySelector(".tempo-stage"),
+  pendulum: document.querySelector("#pendulum"),
+  beatDots: document.querySelector("#beatDots"),
+  beatCounter: document.querySelector("#beatCounter"),
+  measureCounter: document.querySelector("#measureCounter"),
+  rhythmPatternName: document.querySelector("#rhythmPatternName"),
+  rhythmPatternInfo: document.querySelector("#rhythmPatternInfo"),
+  metronomeToggleButton: document.querySelector("#metronomeToggleButton"),
   reviewSummary: document.querySelector("#reviewSummary"),
   reviewList: document.querySelector("#reviewList"),
   startReviewButton: document.querySelector("#startReviewButton"),
@@ -717,6 +975,7 @@ function loadSettings() {
 }
 
 function saveSettings() {
+  const chordTypeIds = [...els.chordTypeOptions.querySelectorAll("input:checked")].map((input) => input.value);
   const settings = {
     quizMode: els.quizMode.value,
     quizScale: els.quizScale.value,
@@ -727,6 +986,20 @@ function saveSettings() {
     earDifficulty: els.earDifficulty.value,
     earNoteSet: els.earNoteSet.value,
     chartScale: els.chartScale.value,
+    chordRoot: els.chordRootSelect.value,
+    chordBpm: els.chordBpmInput.value,
+    chordUnit: els.chordUnitSelect.value,
+    chordChangeEvery: els.chordChangeEverySelect.value,
+    chordTypeIds,
+    meter: els.meterSelect.value,
+    rhythmPattern: els.rhythmPatternSelect.value,
+    metronomeSound: els.metronomeSoundSelect.value,
+    beatModes: state.beatModes,
+    beatShape: state.beatShape,
+    visualOptions: state.visualOptions,
+    autoTempoEvery: els.autoTempoEveryInput.value,
+    autoTempoAmount: els.autoTempoAmountInput.value,
+    tempo: els.tempoInput.value,
     autoNext: els.autoNextToggle.checked,
   };
   localStorage.setItem("scaleTrainerSettings", JSON.stringify(settings));
@@ -743,6 +1016,36 @@ function applySettings() {
   if (settings.earDifficulty) els.earDifficulty.value = settings.earDifficulty;
   if (settings.earNoteSet) els.earNoteSet.value = settings.earNoteSet;
   if (settings.chartScale) els.chartScale.value = settings.chartScale;
+  if (settings.chordRoot) els.chordRootSelect.value = settings.chordRoot;
+  if (settings.chordBpm) els.chordBpmInput.value = settings.chordBpm;
+  if (settings.chordUnit) els.chordUnitSelect.value = settings.chordUnit;
+  if (settings.chordChangeEvery) els.chordChangeEverySelect.value = settings.chordChangeEvery;
+  if (Array.isArray(settings.chordTypeIds) && settings.chordTypeIds.length) {
+    [...els.chordTypeOptions.querySelectorAll("input")].forEach((input) => {
+      input.checked = settings.chordTypeIds.includes(input.value);
+    });
+  }
+  if (settings.meter) els.meterSelect.value = settings.meter;
+  if (settings.rhythmPattern) els.rhythmPatternSelect.value = settings.rhythmPattern;
+  if (settings.metronomeSound) els.metronomeSoundSelect.value = settings.metronomeSound;
+  if (Array.isArray(settings.beatModes)) state.beatModes = settings.beatModes;
+  if (!settings.beatModes && Array.isArray(settings.customAccents)) {
+    state.beatModes = Array.from({ length: Number(els.meterSelect.value) || 4 }, (_, index) => (
+      settings.customAccents.includes(index) ? "accent" : "basic"
+    ));
+  }
+  if (settings.beatShape) state.beatShape = settings.beatShape;
+  if (settings.visualOptions) state.visualOptions = { ...state.visualOptions, ...settings.visualOptions };
+  if (settings.visualMode) {
+    state.visualOptions = {
+      dots: settings.visualMode !== "hidden",
+      pendulum: settings.visualMode === "pendulum",
+      flash: settings.visualMode === "flash",
+    };
+  }
+  if (settings.autoTempoEvery) els.autoTempoEveryInput.value = settings.autoTempoEvery;
+  if (settings.autoTempoAmount) els.autoTempoAmountInput.value = settings.autoTempoAmount;
+  if (settings.tempo) setTempo(settings.tempo);
   if (typeof settings.autoNext === "boolean") els.autoNextToggle.checked = settings.autoNext;
 }
 
@@ -1427,6 +1730,422 @@ function nextGuitarPrompt() {
   els.guitarHint.textContent = `${item.root} 스케일을 ${item.position} 포지션으로 잡고 연주하세요. 이 루트는 다음 한 바퀴 전까지 제외됩니다.`;
 }
 
+function populateChordControls() {
+  chordRoots.forEach((root) => {
+    els.chordRootSelect.add(new Option(root, root));
+  });
+  els.chordTypeOptions.innerHTML = "";
+  chordTypes.forEach((type) => {
+    const label = document.createElement("label");
+    label.className = "chord-type-option";
+    label.innerHTML = `
+      <input type="checkbox" value="${type.id}" ${["M", "m", "7", "M7", "m7"].includes(type.id) ? "checked" : ""}>
+      <span>${type.id}</span>
+    `;
+    els.chordTypeOptions.append(label);
+  });
+}
+
+function selectedChordTypes() {
+  const selected = new Set([...els.chordTypeOptions.querySelectorAll("input:checked")].map((input) => input.value));
+  const picked = chordTypes.filter((type) => selected.has(type.id));
+  return picked.length ? picked : chordTypes.filter((type) => ["M", "m", "7"].includes(type.id));
+}
+
+function selectedChordRoots() {
+  return els.chordRootSelect.value === "random" ? chordRoots : [els.chordRootSelect.value];
+}
+
+function chordName(root, type) {
+  return `${root}${type.symbol}`;
+}
+
+function buildChord(root, type) {
+  const rootSemitone = semitoneOf(root);
+  const notes = type.intervals.map((interval) => noteFromSemitone(rootSemitone + interval, root));
+  const midis = type.intervals.map((interval) => 48 + rootSemitone + interval);
+  return {
+    root,
+    type,
+    name: chordName(root, type),
+    notes,
+    midis,
+  };
+}
+
+function randomChordItem(rootPool = null, typePool = null) {
+  const roots = rootPool || selectedChordRoots();
+  const types = typePool || selectedChordTypes();
+  const root = roots[randomInt(0, roots.length - 1)];
+  const type = types[randomInt(0, types.length - 1)];
+  return buildChord(root, type);
+}
+
+function renderChordTrainer() {
+  if (!state.chordCurrent) state.chordCurrent = randomChordItem();
+  if (!state.chordNext) state.chordNext = randomChordItem();
+  els.chordCurrentDisplay.textContent = state.chordCountIn ? String(state.chordBeat) : state.chordCurrent.name;
+  els.chordCurrentDisplay.classList.toggle("count-in", state.chordCountIn);
+  els.chordNextDisplay.textContent = state.chordCountIn ? state.chordCurrent.name : state.chordNext.name;
+  els.chordBeatDisplay.textContent = String(state.chordBeat);
+}
+
+async function playChordClick(isAccent = false) {
+  const context = await getAudioContext();
+  if (!context) return;
+  const now = context.currentTime + 0.02;
+  playClick(context, now, isAccent ? 1320 : 920, isAccent ? 0.18 : 0.11, 0.04, "square");
+}
+
+function chordIntervalMs() {
+  const bpm = Math.min(240, Math.max(30, Number(els.chordBpmInput.value) || 80));
+  const quarter = 60000 / bpm;
+  if (els.chordUnitSelect.value === "eighth") return quarter / 2;
+  if (els.chordUnitSelect.value === "sixteenth") return quarter / 4;
+  return quarter;
+}
+
+function advanceChordCount() {
+  const changeEvery = Number(els.chordChangeEverySelect.value) || 4;
+  if (state.chordCountIn) {
+    if (state.chordBeat > changeEvery) {
+      state.chordCountIn = false;
+      state.chordBeat = 1;
+      renderChordTrainer();
+      playChordClick(true);
+      return;
+    }
+    renderChordTrainer();
+    playChordClick(state.chordBeat === 1);
+    state.chordBeat += 1;
+    return;
+  }
+  if (state.chordBeat >= changeEvery) {
+    state.chordCurrent = state.chordNext || randomChordItem();
+    state.chordNext = randomChordItem();
+    state.chordBeat = 1;
+    playChordClick(true);
+  } else {
+    state.chordBeat += 1;
+    playChordClick(false);
+  }
+  renderChordTrainer();
+}
+
+function nextChordNow() {
+  state.chordCurrent = state.chordNext || randomChordItem();
+  state.chordNext = randomChordItem();
+  state.chordBeat = 1;
+  state.chordCountIn = false;
+  renderChordTrainer();
+  playChordClick(true);
+}
+
+function resetChordTrainer() {
+  state.chordCurrent = randomChordItem();
+  state.chordNext = randomChordItem();
+  state.chordBeat = 1;
+  state.chordCountIn = false;
+  renderChordTrainer();
+}
+
+function restartChordTimer() {
+  if (!state.chordPlaying) return;
+  if (state.chordTimer) clearInterval(state.chordTimer);
+  state.chordTimer = setInterval(advanceChordCount, chordIntervalMs());
+}
+
+function toggleChordTrainer() {
+  if (state.chordPlaying) {
+    state.chordPlaying = false;
+    if (state.chordTimer) clearInterval(state.chordTimer);
+    state.chordTimer = null;
+    els.chordPlayToggleButton.textContent = "재생";
+    state.chordCountIn = false;
+    state.chordBeat = 1;
+    renderChordTrainer();
+    return;
+  }
+  state.chordPlaying = true;
+  els.chordPlayToggleButton.textContent = "정지";
+  state.chordBeat = 1;
+  state.chordCountIn = true;
+  renderChordTrainer();
+  playChordClick(true);
+  state.chordBeat = 2;
+  restartChordTimer();
+}
+
+function selectBasicChordTypes() {
+  [...els.chordTypeOptions.querySelectorAll("input")].forEach((input) => {
+    input.checked = ["M", "m", "7", "M7", "m7"].includes(input.value);
+  });
+  saveSettings();
+  state.chordCurrent = randomChordItem();
+  state.chordNext = randomChordItem();
+  state.chordBeat = 1;
+  renderChordTrainer();
+}
+
+function renderRhythmStudy() {
+  els.rhythmStudyList.innerHTML = "";
+  rhythmTypes.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "rhythm-study-card";
+    card.innerHTML = `
+      <div class="rhythm-symbol">${item.symbol}</div>
+      <div>
+        <strong>${item.name}</strong>
+        <span>${item.unit}</span>
+        <p>${item.feel}<br>읽기: ${item.say}</p>
+      </div>
+    `;
+    els.rhythmStudyList.append(card);
+  });
+}
+
+function populateRhythmPatterns() {
+  els.rhythmPatternSelect.innerHTML = "";
+  rhythmTypes.forEach((item) => {
+    els.rhythmPatternSelect.add(new Option(item.name, item.id));
+  });
+}
+
+function currentRhythmPattern() {
+  return rhythmTypes.find((item) => item.id === els.rhythmPatternSelect.value) || rhythmTypes[0];
+}
+
+function normalizeBeatModes() {
+  const beats = Number(els.meterSelect.value) || 4;
+  state.beatModes = Array.from({ length: beats }, (_, index) => state.beatModes[index] || "basic");
+}
+
+function renderBeatShapeButtons() {
+  els.beatShapeButtons.querySelectorAll("[data-beat-shape]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.beatShape === state.beatShape);
+  });
+}
+
+function renderVisualToggleButtons() {
+  els.visualToggleButtons.querySelectorAll("[data-visual-toggle]").forEach((button) => {
+    button.classList.toggle("active", Boolean(state.visualOptions[button.dataset.visualToggle]));
+  });
+}
+
+function renderBeatDots() {
+  const beats = Number(els.meterSelect.value) || 4;
+  normalizeBeatModes();
+  els.beatDots.innerHTML = "";
+  els.beatDots.dataset.shape = state.beatShape;
+  els.tempoStage.classList.toggle("show-dots", state.visualOptions.dots);
+  els.tempoStage.classList.toggle("show-pendulum", state.visualOptions.pendulum);
+  const activeBeat = state.beatIndex % beats;
+  const measureNumber = Math.floor(state.beatIndex / beats) + 1;
+  els.beatCounter.textContent = `${activeBeat + 1} / ${beats}`;
+  renderMeasureCounter(measureNumber);
+  Array.from({ length: beats }).forEach((_, index) => {
+    const dot = document.createElement("span");
+    const mode = state.beatModes[index] || "basic";
+    dot.className = [
+      mode,
+      index === activeBeat ? "active" : "",
+    ].filter(Boolean).join(" ");
+    dot.dataset.beatIndex = String(index);
+    dot.title = `${index + 1}박 ${beatModeLabel(mode)}`;
+    dot.innerHTML = `<b>${beatModeText(mode)}</b>`;
+    els.beatDots.append(dot);
+  });
+  updatePendulum();
+  renderBeatShapeButtons();
+  renderVisualToggleButtons();
+}
+
+function beatModeLabel(mode) {
+  if (mode === "accent") return "강세";
+  if (mode === "mute") return "무음";
+  return "기본";
+}
+
+function beatModeText(mode) {
+  if (mode === "accent") return "강";
+  if (mode === "mute") return "무";
+  return "기";
+}
+
+function nextBeatMode(mode) {
+  if (mode === "accent") return "basic";
+  if (mode === "basic") return "mute";
+  return "accent";
+}
+
+function renderMeasureCounter(measureNumber = 1) {
+  const every = Number(els.autoTempoEveryInput.value) || 0;
+  const amount = Number(els.autoTempoAmountInput.value) || 0;
+  els.measureCounter.classList.toggle("hidden", !(every > 0 && amount > 0));
+  if (!(every > 0 && amount > 0)) return;
+  const until = every - ((measureNumber - 1) % every);
+  els.measureCounter.textContent = `${measureNumber}마디 · ${until}마디 후 +${amount} BPM`;
+}
+
+function renderRhythmPatternInfo() {
+  const pattern = currentRhythmPattern();
+  els.rhythmPatternName.textContent = pattern.name;
+  els.rhythmPatternInfo.textContent = `${pattern.unit}. ${pattern.feel} 읽기: ${pattern.say}`;
+  renderBeatDots();
+}
+
+function setTempo(value) {
+  const tempo = Math.min(240, Math.max(30, Number(value) || 80));
+  els.tempoInput.value = String(tempo);
+  els.tempoSlider.value = String(tempo);
+  els.tempoValue.textContent = String(tempo);
+  renderTempoPresets(tempo);
+  return tempo;
+}
+
+function renderTempoPresets(tempo = Number(els.tempoInput.value)) {
+  els.tempoPresetButtons.forEach((button) => {
+    button.classList.toggle("active", Number(button.dataset.tempoPreset) === Number(tempo));
+  });
+}
+
+function currentMetronomeSound() {
+  return metronomeSounds[els.metronomeSoundSelect.value] || metronomeSounds.classic;
+}
+
+function shouldAccent(beatInMeasure) {
+  return state.beatModes[beatInMeasure] === "accent";
+}
+
+function shouldMuteBeat(beatInMeasure) {
+  return state.beatModes[beatInMeasure] === "mute";
+}
+
+function maybeAutoIncreaseTempo(measureIndex, beatInMeasure) {
+  const autoEvery = Number(els.autoTempoEveryInput.value) || 0;
+  const autoAmount = Number(els.autoTempoAmountInput.value) || 0;
+  if (!autoEvery || !autoAmount || beatInMeasure !== 0 || measureIndex === 0 || measureIndex % autoEvery !== 0) return;
+  setTempo(Number(els.tempoInput.value) + autoAmount);
+  saveSettings();
+  setTimeout(restartMetronomeTimer, 0);
+}
+
+function updatePendulum() {
+  const beats = Number(els.meterSelect.value) || 4;
+  const beat = state.beatIndex % beats;
+  const direction = beat % 2 === 0 ? -1 : 1;
+  const spread = beats === 3 ? 24 : 32;
+  els.pendulum.style.setProperty("--pendulum-x", `${direction * spread}px`);
+}
+
+function flashStage() {
+  if (!state.visualOptions.flash) return;
+  els.tempoStage.classList.remove("flash");
+  void els.tempoStage.offsetWidth;
+  els.tempoStage.classList.add("flash");
+}
+
+function playClick(context, time, frequency, gainValue, duration = 0.045, type = "square") {
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  oscillator.type = type;
+  oscillator.frequency.setValueAtTime(frequency, time);
+  gain.gain.setValueAtTime(0.0001, time);
+  gain.gain.exponentialRampToValueAtTime(gainValue, time + 0.006);
+  gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(time);
+  oscillator.stop(time + duration + 0.02);
+}
+
+function scheduleQuarterTriplet(context, start, beatSeconds, beatInMeasure, sound, isAccent) {
+  if (beatInMeasure % 2 !== 0) return false;
+  const frequencies = [isAccent ? sound.accent : sound.beat, sound.subdivision, sound.subdivision];
+  const gains = [isAccent ? sound.accentGain : sound.beatGain, sound.subGain * 1.15, sound.subGain * 1.15];
+  [0, (2 / 3) * beatSeconds, (4 / 3) * beatSeconds].forEach((offset, index) => {
+    playClick(context, start + offset, frequencies[index], gains[index], sound.duration, sound.type);
+  });
+  return true;
+}
+
+function scheduleRhythmSubdivision(context, start, beatSeconds, pattern, beatInMeasure) {
+  const sound = currentMetronomeSound();
+  if (pattern.id === "quarter") return;
+  const count = pattern.subdivisions || 1;
+  for (let index = 1; index < count; index += 1) {
+    playClick(context, start + (beatSeconds / count) * index, sound.subdivision, sound.subGain, sound.duration * 0.75, sound.type);
+  }
+}
+
+async function playMetronomeBeat() {
+  const context = await getAudioContext();
+  if (!context) return;
+  const beats = Number(els.meterSelect.value) || 4;
+  const beatSeconds = 60 / setTempo(els.tempoInput.value);
+  const beatInMeasure = state.beatIndex % beats;
+  const measureIndex = Math.floor(state.beatIndex / beats);
+  maybeAutoIncreaseTempo(measureIndex, beatInMeasure);
+  const now = context.currentTime + 0.025;
+  const isAccent = shouldAccent(beatInMeasure);
+  const sound = currentMetronomeSound();
+  const pattern = currentRhythmPattern();
+  if (!shouldMuteBeat(beatInMeasure)) {
+    const handled = pattern.id === "quarterTriplet"
+      ? scheduleQuarterTriplet(context, now, beatSeconds, beatInMeasure, sound, isAccent)
+      : false;
+    if (!handled && pattern.id !== "quarterTriplet") {
+      playClick(
+        context,
+        now,
+        isAccent ? sound.accent : sound.beat,
+        isAccent ? sound.accentGain : sound.beatGain,
+        sound.duration,
+        sound.type,
+      );
+      scheduleRhythmSubdivision(context, now, beatSeconds, pattern, beatInMeasure);
+    }
+  }
+  renderBeatDots();
+  flashStage();
+  state.beatIndex += 1;
+}
+
+function restartMetronomeTimer() {
+  if (!state.metronomeOn) return;
+  if (state.metronomeTimer) clearInterval(state.metronomeTimer);
+  const interval = (60 / setTempo(els.tempoInput.value)) * 1000;
+  state.metronomeTimer = setInterval(playMetronomeBeat, interval);
+}
+
+async function toggleMetronome() {
+  if (state.metronomeOn) {
+    state.metronomeOn = false;
+    if (state.metronomeTimer) clearInterval(state.metronomeTimer);
+    state.metronomeTimer = null;
+    els.metronomeToggleButton.textContent = "▶";
+    els.metronomeToggleButton.classList.remove("playing");
+    renderBeatDots();
+    return;
+  }
+  state.metronomeOn = true;
+  state.beatIndex = 0;
+  els.metronomeToggleButton.textContent = "■";
+  els.metronomeToggleButton.classList.add("playing");
+  await playMetronomeBeat();
+  restartMetronomeTimer();
+}
+
+function handleTapTempo() {
+  const now = Date.now();
+  state.tapTimes = [...state.tapTimes.filter((time) => now - time < 2500), now].slice(-4);
+  if (state.tapTimes.length < 2) return;
+  const gaps = state.tapTimes.slice(1).map((time, index) => time - state.tapTimes[index]);
+  const average = gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length;
+  setTempo(Math.round(60000 / average));
+  saveSettings();
+  restartMetronomeTimer();
+}
+
 function levelLabel(level) {
   if (level === "easy") return "쉬움";
   if (level === "normal") return "보통";
@@ -1460,12 +2179,16 @@ function renderReview() {
 
 function switchView(view) {
   clearAutoAdvance();
+  if (state.view === "rhythm" && view !== "rhythm" && state.metronomeOn) toggleMetronome();
+  if (state.view === "chord" && view !== "chord" && state.chordPlaying) toggleChordTrainer();
   state.view = view;
   els.tabs.forEach((button) => button.classList.toggle("active", button.dataset.view === view));
   els.quizView.classList.toggle("hidden", view !== "quiz");
   els.harmonyView.classList.toggle("hidden", view !== "harmony");
   els.earView.classList.toggle("hidden", view !== "ear");
   els.guitarView.classList.toggle("hidden", view !== "guitar");
+  els.rhythmView.classList.toggle("hidden", view !== "rhythm");
+  els.chordView.classList.toggle("hidden", view !== "chord");
   els.reviewView.classList.toggle("hidden", view !== "review");
   els.chartView.classList.toggle("hidden", view !== "chart");
   els.circleView.classList.toggle("hidden", view !== "circle");
@@ -1541,6 +2264,103 @@ els.earNextButton.addEventListener("click", nextEarQuestion);
 els.earShuffleButton.addEventListener("click", buildEarDeck);
 els.guitarNextButton.addEventListener("click", nextGuitarPrompt);
 els.guitarShuffleButton.addEventListener("click", buildGuitarDeck);
+els.chordPlayToggleButton.addEventListener("click", toggleChordTrainer);
+els.chordNextNowButton.addEventListener("click", nextChordNow);
+els.clearChordTypesButton.addEventListener("click", selectBasicChordTypes);
+els.chordRootSelect.addEventListener("change", () => {
+  saveSettings();
+  resetChordTrainer();
+});
+els.chordBpmInput.addEventListener("input", () => {
+  saveSettings();
+  restartChordTimer();
+});
+els.chordUnitSelect.addEventListener("change", () => {
+  saveSettings();
+  restartChordTimer();
+});
+els.chordChangeEverySelect.addEventListener("change", () => {
+  saveSettings();
+  state.chordBeat = 1;
+  renderChordTrainer();
+  restartChordTimer();
+});
+els.chordTypeOptions.addEventListener("change", () => {
+  saveSettings();
+  resetChordTrainer();
+});
+els.metronomeToggleButton.addEventListener("click", toggleMetronome);
+els.rhythmPatternSelect.addEventListener("change", () => {
+  saveSettings();
+  renderRhythmPatternInfo();
+});
+els.metronomeSoundSelect.addEventListener("change", saveSettings);
+els.beatDots.addEventListener("click", (event) => {
+  const beat = event.target.closest("[data-beat-index]");
+  if (!beat) return;
+  const index = Number(beat.dataset.beatIndex);
+  state.beatModes[index] = nextBeatMode(state.beatModes[index] || "basic");
+  normalizeBeatModes();
+  saveSettings();
+  renderBeatDots();
+});
+els.beatShapeButtons.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-beat-shape]");
+  if (!button) return;
+  state.beatShape = button.dataset.beatShape;
+  saveSettings();
+  renderBeatDots();
+});
+els.visualToggleButtons.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-visual-toggle]");
+  if (!button) return;
+  const key = button.dataset.visualToggle;
+  state.visualOptions[key] = !state.visualOptions[key];
+  saveSettings();
+  renderBeatDots();
+});
+els.meterSelect.addEventListener("change", () => {
+  saveSettings();
+  state.beatIndex = 0;
+  normalizeBeatModes();
+  renderBeatDots();
+});
+els.autoTempoEveryInput.addEventListener("input", () => {
+  saveSettings();
+  renderBeatDots();
+});
+els.autoTempoAmountInput.addEventListener("input", () => {
+  saveSettings();
+  renderBeatDots();
+});
+els.tapTempoButton.addEventListener("click", handleTapTempo);
+els.tempoPresetButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    setTempo(button.dataset.tempoPreset);
+    saveSettings();
+    restartMetronomeTimer();
+  });
+});
+els.tempoInput.addEventListener("input", () => {
+  setTempo(els.tempoInput.value);
+  saveSettings();
+  restartMetronomeTimer();
+});
+els.tempoSlider.addEventListener("input", () => {
+  setTempo(els.tempoSlider.value);
+  saveSettings();
+  restartMetronomeTimer();
+});
+els.tempoDownButton.addEventListener("click", () => {
+  setTempo(Number(els.tempoInput.value) - 1);
+  saveSettings();
+  restartMetronomeTimer();
+});
+els.tempoUpButton.addEventListener("click", () => {
+  setTempo(Number(els.tempoInput.value) + 1);
+  saveSettings();
+  restartMetronomeTimer();
+});
 els.startReviewButton.addEventListener("click", buildReviewDeck);
 els.clearReviewButton.addEventListener("click", clearReviewItems);
 els.notePad.addEventListener("click", (event) => {
@@ -1563,11 +2383,18 @@ els.answerInput.addEventListener("keydown", (event) => {
 });
 
 populateSelects();
+populateChordControls();
+renderRhythmStudy();
+populateRhythmPatterns();
 applySettings();
+state.chordCurrent = randomChordItem();
+state.chordNext = randomChordItem();
+renderChordTrainer();
 buildDeck();
 buildHarmonyDeck();
 buildEarDeck();
 buildGuitarDeck();
+renderRhythmPatternInfo();
 renderScaleChart();
 renderCircle();
 renderReview();

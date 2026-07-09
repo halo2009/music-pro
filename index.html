@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=20">
+  <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
   <main class="app">
@@ -32,6 +32,8 @@
       <button type="button" data-view="harmony">화성학</button>
       <button type="button" data-view="ear">음감</button>
       <button type="button" data-view="guitar">기타</button>
+      <button type="button" data-view="rhythm">박자</button>
+      <button type="button" data-view="chord">코드</button>
       <button type="button" data-view="review">오답노트</button>
       <button type="button" data-view="chart">스케일 차트</button>
       <button type="button" data-view="circle">5도권</button>
@@ -220,6 +222,163 @@
       </section>
     </section>
 
+    <section id="rhythmView" class="view hidden">
+      <section class="metronome-panel">
+        <section class="tempo-stage" aria-live="polite">
+          <h2>TEMPO</h2>
+          <div id="pendulum" class="pendulum"><span></span></div>
+          <div id="beatCounter" class="beat-counter">1 / 4</div>
+          <div id="beatDots" class="beat-dots"></div>
+          <div id="measureCounter" class="measure-counter hidden">1마디</div>
+          <div>
+            <strong id="rhythmPatternName">4분음표</strong>
+            <p id="rhythmPatternInfo">기본 클릭만 들립니다.</p>
+          </div>
+        </section>
+
+        <section class="tempo-card">
+          <div class="tempo-number-row">
+            <button id="tempoDownButton" class="tempo-step" type="button">−</button>
+            <div class="tempo-readout">
+              <span>♩ =</span>
+              <strong id="tempoValue">80</strong>
+              <em>BPM</em>
+            </div>
+            <button id="tempoUpButton" class="tempo-step" type="button">+</button>
+          </div>
+
+          <input id="tempoSlider" type="range" min="30" max="240" value="80">
+
+          <div class="tempo-quick-row" aria-label="빠른 템포 설정">
+            <button type="button" data-tempo-preset="60">60</button>
+            <button type="button" data-tempo-preset="80">80</button>
+            <button type="button" data-tempo-preset="100">100</button>
+            <button type="button" data-tempo-preset="120">120</button>
+            <button type="button" data-tempo-preset="140">140</button>
+            <button id="tapTempoButton" type="button">TAP</button>
+          </div>
+
+          <button id="metronomeToggleButton" class="play-orb" type="button" aria-label="메트로놈 시작">▶</button>
+        </section>
+
+        <section class="toolbar rhythm-toolbar" aria-label="메트로놈 설정">
+          <label>
+            <span>박자표</span>
+            <select id="meterSelect">
+              <option value="4">4/4</option>
+              <option value="3">3/4</option>
+              <option value="6">6/8</option>
+            </select>
+          </label>
+          <label>
+            <span>들을 리듬</span>
+            <select id="rhythmPatternSelect"></select>
+          </label>
+          <label>
+            <span>소리</span>
+            <select id="metronomeSoundSelect">
+              <option value="classic">클래식 클릭</option>
+              <option value="wood">우드 블록</option>
+              <option value="digital">디지털 비프</option>
+              <option value="soft">부드러운 톤</option>
+              <option value="rim">림샷</option>
+              <option value="clave">클라베</option>
+              <option value="glass">글라스 톤</option>
+            </select>
+          </label>
+          <div class="icon-picker">
+            <span>불빛 모양</span>
+            <div id="beatShapeButtons" class="icon-buttons" aria-label="불빛 모양 선택">
+              <button type="button" data-beat-shape="circle" class="active" aria-label="원">●</button>
+              <button type="button" data-beat-shape="bar" aria-label="막대">▮</button>
+              <button type="button" data-beat-shape="diamond" aria-label="다이아">◆</button>
+              <button type="button" data-beat-shape="square" aria-label="사각형">■</button>
+            </div>
+          </div>
+          <div class="icon-picker">
+            <span>화면 효과</span>
+            <div id="visualToggleButtons" class="icon-buttons" aria-label="화면 효과 선택">
+              <button type="button" data-visual-toggle="dots" class="active" aria-label="불빛 표시">●</button>
+              <button type="button" data-visual-toggle="pendulum" aria-label="진자 운동">⌁</button>
+              <button type="button" data-visual-toggle="flash" aria-label="전체 깜빡임">✦</button>
+            </div>
+          </div>
+          <label>
+            <span>몇 마디마다 증가</span>
+            <input id="autoTempoEveryInput" class="answer-input" type="number" min="0" max="64" value="0">
+          </label>
+          <label>
+            <span>몇 BPM 증가</span>
+            <input id="autoTempoAmountInput" class="answer-input" type="number" min="1" max="30" value="5">
+          </label>
+          <label>
+            <span>BPM 직접 입력</span>
+            <input id="tempoInput" class="answer-input" type="number" min="30" max="240" value="80">
+          </label>
+        </section>
+
+        <section id="rhythmStudyList" class="rhythm-study-list metronome-study" aria-label="리듬 설명"></section>
+
+      </section>
+    </section>
+
+    <section id="chordView" class="view hidden">
+      <section class="chord-trainer">
+        <section class="chord-stage" aria-live="polite">
+          <div class="chord-stage-top">
+            <p class="eyebrow">Chord Trainer</p>
+            <span id="chordBeatDisplay">1</span>
+          </div>
+          <strong id="chordCurrentDisplay">C</strong>
+          <p>다음 코드 <span id="chordNextDisplay">G</span></p>
+        </section>
+
+        <section class="chord-transport">
+          <button id="chordPlayToggleButton" class="primary" type="button">재생</button>
+          <button id="chordNextNowButton" class="secondary" type="button">다음 코드</button>
+        </section>
+
+        <section class="toolbar chord-toolbar" aria-label="코드 훈련 설정">
+          <label>
+            <span>BPM</span>
+            <input id="chordBpmInput" class="answer-input" type="number" min="30" max="240" value="80">
+          </label>
+          <label>
+            <span>카운트 기준</span>
+            <select id="chordUnitSelect">
+              <option value="quarter">4분음표</option>
+              <option value="eighth">8분음표</option>
+              <option value="sixteenth">16분음표</option>
+            </select>
+          </label>
+          <label>
+            <span>몇 번 후 변경</span>
+            <select id="chordChangeEverySelect">
+              <option value="4">4번 후</option>
+              <option value="3">3번 후</option>
+              <option value="2">2번 후</option>
+              <option value="1">1번 후</option>
+            </select>
+          </label>
+          <label>
+            <span>루트</span>
+            <select id="chordRootSelect">
+              <option value="random">C~B 랜덤</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="chord-type-head">
+          <div>
+            <p class="eyebrow">Chord Pool</p>
+            <h3>나올 코드 종류</h3>
+          </div>
+          <button id="clearChordTypesButton" class="mini-button" type="button">기본만</button>
+        </section>
+        <section id="chordTypeOptions" class="chord-type-options" aria-label="코드 종류 선택"></section>
+      </section>
+    </section>
+
     <section id="reviewView" class="view hidden">
       <section class="circle-panel">
         <div class="review-head">
@@ -269,6 +428,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=20"></script>
+  <script src="app.js?v=34"></script>
 </body>
 </html>
