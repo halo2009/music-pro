@@ -899,7 +899,12 @@ function semitoneOf(note) {
   const normalized = enharmonic[note] || note;
   const sharpIndex = sharpChromatic.indexOf(normalized);
   if (sharpIndex >= 0) return sharpIndex;
-  return flatChromatic.indexOf(normalized);
+  const flatIndex = flatChromatic.indexOf(normalized);
+  if (flatIndex >= 0) return flatIndex;
+  const match = normalized.match(/^([A-G])([#b]{1,2})$/);
+  if (!match) return -1;
+  const accidentalOffset = [...match[2]].reduce((sum, accidental) => sum + (accidental === "#" ? 1 : -1), 0);
+  return (((naturalSemitones[match[1]] + accidentalOffset) % 12) + 12) % 12;
 }
 
 function chooseChromatic(root) {
@@ -907,15 +912,15 @@ function chooseChromatic(root) {
   return sharpChromatic;
 }
 
-function spellNote(letter, targetSemitone) {
+function spellNote(letter, targetSemitone, root) {
   const natural = naturalSemitones[letter];
   const diff = (((targetSemitone - natural) % 12) + 12) % 12;
   if (diff === 0) return letter;
   if (diff === 1) return `${letter}#`;
-  if (diff === 2) return `${letter}##`;
+  if (diff === 2) return noteFromSemitone(targetSemitone, root);
   if (diff === 11) return `${letter}b`;
-  if (diff === 10) return `${letter}bb`;
-  return noteFromSemitone(targetSemitone, letter);
+  if (diff === 10) return noteFromSemitone(targetSemitone, root);
+  return noteFromSemitone(targetSemitone, root);
 }
 
 function noteFromSemitone(semitone, root) {
@@ -934,7 +939,7 @@ function buildScale(root, scale) {
       return;
     }
     const letter = naturalChromatic[(rootLetterIndex + index + 1) % naturalChromatic.length];
-    notes.push(spellNote(letter, semitone));
+    notes.push(spellNote(letter, semitone, root));
   });
   return notes;
 }

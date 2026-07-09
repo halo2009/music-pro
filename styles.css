@@ -109,13 +109,13 @@ h2 {
 .main-tabs {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 14px;
 }
 
 .main-tabs button,
 .actions button {
-  min-height: 46px;
+  min-height: 42px;
   border-radius: 8px;
   font-weight: 900;
 }
@@ -123,6 +123,8 @@ h2 {
 .main-tabs button {
   background: rgba(255, 255, 255, 0.76);
   color: var(--muted);
+  padding: 0 6px;
+  font-size: 13px;
   box-shadow: inset 0 0 0 1px rgba(31, 37, 40, 0.09);
 }
 
@@ -1580,23 +1582,19 @@ select,
     font-size: 24px;
   }
 
-  .main-tabs,
   .actions {
     grid-template-columns: 1fr;
   }
 
   .main-tabs {
-    display: flex;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    scroll-snap-type: x proximity;
-    -webkit-overflow-scrolling: touch;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .main-tabs button {
-    flex: 0 0 auto;
-    min-width: 92px;
-    scroll-snap-align: start;
+    min-height: 38px;
+    padding: 0 4px;
+    font-size: 12px;
   }
 
   .choice-grid {
