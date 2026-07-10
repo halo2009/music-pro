@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icon.svg">
-  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="styles.css?v=42">
 </head>
 <body>
   <main class="app">
@@ -35,7 +35,7 @@
       <button type="button" data-view="rhythm">박자</button>
       <button type="button" data-view="chord">코드</button>
       <button type="button" data-view="review">오답노트</button>
-      <button type="button" data-view="chart">스케일 차트</button>
+      <button type="button" data-view="chart">화성학 이론</button>
       <button type="button" data-view="circle">5도권</button>
     </nav>
 
@@ -397,13 +397,13 @@
     <section id="chartView" class="view hidden">
       <section class="chart-filter">
         <label>
-          <span>보고 싶은 스케일</span>
+          <span>보고 싶은 이론</span>
           <select id="chartScale"></select>
         </label>
       </section>
 
-      <section id="scaleInfo" class="scale-info"></section>
-      <section id="scaleChart" class="scale-chart" aria-label="스케일 차트"></section>
+      <section id="scaleInfo" class="scale-info theory-info"></section>
+      <section id="scaleChart" class="scale-chart theory-chart" aria-label="화성학 이론"></section>
     </section>
 
     <section id="circleView" class="view hidden">
@@ -411,7 +411,17 @@
         <div>
           <p class="eyebrow">Circle of Fifths</p>
           <h2>5도권 암기표</h2>
-          <p class="hint">오른쪽으로 갈수록 샵이 하나씩 늘고, 왼쪽으로 갈수록 플랫이 하나씩 늘어납니다.</p>
+          <p class="hint">시계 방향은 완전5도씩 올라가는 5도권이고, 반시계 방향은 완전4도씩 올라가는 4도권입니다.</p>
+        </div>
+        <div class="circle-directions" aria-label="5도권 방향 설명">
+          <article>
+            <strong>시계 방향: 5도권</strong>
+            <span>C → G → D → A처럼 완전5도 위로 이동합니다. 오른쪽으로 갈수록 # 조표가 하나씩 늘어납니다.</span>
+          </article>
+          <article>
+            <strong>반시계 방향: 4도권</strong>
+            <span>C → F → Bb → Eb처럼 완전4도 위로 이동합니다. 왼쪽으로 갈수록 b 조표가 하나씩 늘어납니다.</span>
+          </article>
         </div>
         <div class="signature-order" aria-label="조표 붙는 순서">
           <article>
@@ -428,6 +438,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=38"></script>
+  <script src="app.js?v=42"></script>
 </body>
 </html>

@@ -1212,6 +1212,10 @@ select,
   padding: 20px;
 }
 
+.theory-info {
+  grid-template-columns: 1fr 1.4fr;
+}
+
 .info-box {
   padding: 14px;
   border-radius: 8px;
@@ -1254,6 +1258,14 @@ select,
   padding: 16px;
 }
 
+.theory-card {
+  min-height: 100%;
+}
+
+.theory-section-card {
+  background: #f7f8f5;
+}
+
 .scale-row-head {
   display: flex;
   align-items: center;
@@ -1293,6 +1305,31 @@ select,
   font-weight: 950;
 }
 
+.theory-note {
+  min-width: 0;
+  padding-inline: 12px;
+  line-height: 1.2;
+}
+
+.theory-points {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1.55;
+}
+
+.theory-section-text {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1.6;
+  white-space: pre-line;
+}
+
 .circle-panel {
   padding: 22px;
 }
@@ -1306,6 +1343,35 @@ select,
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
   margin-top: 16px;
+}
+
+.circle-directions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.circle-directions article {
+  padding: 13px;
+  border-radius: 8px;
+  background: #f7f8f5;
+  box-shadow: inset 0 0 0 1px rgba(31, 37, 40, 0.08);
+}
+
+.circle-directions strong {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.circle-directions span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.45;
 }
 
 .signature-order article {
@@ -1479,7 +1545,8 @@ select,
   .toolbar,
   .quick-options,
   .scale-info,
-  .scale-chart {
+  .scale-chart,
+  .circle-directions {
     grid-template-columns: 1fr;
   }
 

@@ -439,6 +439,257 @@ const scaleTypes = [
   },
 ];
 
+const theoryTopics = [
+  {
+    id: "diatonic",
+    title: "다이아토닉 코드",
+    subtitle: "한 키의 스케일 안에서 만들어지는 기본 코드 묶음",
+    summary: "다이아토닉 코드는 어떤 키의 스케일 음만 사용해서 쌓은 코드입니다. 키 안에서 안정적으로 들리는 진행의 기본 재료입니다.",
+    keyPoints: [
+      "Major Key 3화음: I ii iii IV V vi vii°",
+      "Major Key 7화음: Imaj7 iim7 iiim7 IVmaj7 V7 vim7 viim7b5",
+      "Tonic: I, iii, vi / Subdominant: ii, IV / Dominant: V, vii°",
+      "코드 진행을 볼 때 로마숫자로 보면 키가 바뀌어도 기능을 읽을 수 있습니다.",
+    ],
+    exampleTitle: "C Major 예시",
+    examples: ["C", "Dm", "Em", "F", "G", "Am", "Bdim"],
+    detail: "C Major의 음은 C D E F G A B입니다. 각 음 위에 3도씩 쌓으면 C, Dm, Em, F, G, Am, Bdim이 됩니다. 이 코드들이 C Major 안에서 가장 기본적으로 쓰이는 코드입니다.",
+    sections: [
+      {
+        title: "만드는 법",
+        body: "스케일의 각 음 위에 3도씩 음을 쌓습니다. 3화음은 1-3-5, 7화음은 1-3-5-7까지 쌓습니다. 이때 스케일 밖의 음을 쓰지 않는 것이 핵심입니다.",
+      },
+      {
+        title: "왜 중요한가",
+        body: "다이아토닉 코드는 곡의 기본 어휘입니다. 어떤 코드가 키 안의 코드인지 알면 진행이 안정적인지, 밖에서 빌려온 코드인지 바로 구분할 수 있습니다.",
+      },
+    ],
+  },
+  {
+    id: "functions",
+    title: "토닉 / 서브도미넌트 / 도미넌트",
+    subtitle: "코드가 진행 안에서 맡는 역할",
+    summary: "화성 기능은 코드 이름보다 코드의 역할을 읽는 방법입니다. 안정, 이동, 긴장이라는 세 가지 큰 흐름으로 보면 진행이 훨씬 잘 보입니다.",
+    keyPoints: [
+      "토닉: 안정감. I, vi, iii가 자주 맡습니다.",
+      "서브도미넌트: 토닉에서 벗어나 도미넌트로 가는 준비. IV, ii가 대표적입니다.",
+      "도미넌트: 토닉으로 해결하고 싶게 만드는 긴장. V, vii°가 대표적입니다.",
+      "많은 진행은 T → S → D → T 흐름으로 설명할 수 있습니다.",
+    ],
+    exampleTitle: "대표 진행",
+    examples: ["C", "F", "G", "C"],
+    detail: "C-F-G-C는 T-S-D-T 흐름입니다. C에서 안정적으로 시작하고, F가 방향을 만들고, G가 긴장을 만든 뒤 다시 C로 해결됩니다.",
+  },
+  {
+    id: "chordProgressions",
+    title: "코드 진행",
+    subtitle: "벌스, 코러스, 브릿지에서 자주 쓰는 진행 모음",
+    summary: "코드 진행은 곡의 감정과 방향을 만드는 뼈대입니다. 로마숫자로 외우면 키가 바뀌어도 같은 진행을 바로 옮겨 쓸 수 있습니다.",
+    keyPoints: [
+      "벌스는 보통 안정적이거나 반복적인 진행을 씁니다.",
+      "프리코러스는 코러스로 올라가기 위해 긴장과 상승감을 만듭니다.",
+      "코러스는 I, IV, V, vi를 중심으로 선명하고 기억하기 쉬운 진행이 많습니다.",
+      "브릿지는 기존 진행과 다른 코드, 차용 코드, 마이너 전환으로 분위기를 바꿉니다.",
+      "진행은 정답이 아니라 기능입니다. 같은 진행도 리듬, 멜로디, 템포에 따라 전혀 다르게 들립니다.",
+    ],
+    exampleTitle: "C Major 대표 진행",
+    examples: ["C-G-Am-F", "C-Am-F-G", "F-G-Em-Am", "Dm-G-C", "Am-F-C-G", "C-F-G-C"],
+    detail: "C Major에서 I-V-vi-IV는 C-G-Am-F입니다. 같은 로마숫자 진행을 G Major로 옮기면 G-D-Em-C가 됩니다. 이렇게 로마숫자로 이해하면 모든 키로 바로 옮길 수 있습니다.",
+    sections: [
+      {
+        title: "팝 기본 진행",
+        body: "I-V-vi-IV: 가장 널리 쓰이는 밝고 감정적인 팝 진행입니다. C에서는 C-G-Am-F입니다. I-vi-IV-V: 50s 진행으로 부드럽고 클래식한 느낌입니다. C-Am-F-G입니다. vi-IV-I-V: 벌스나 코러스 모두에 잘 맞고 살짝 애절합니다. Am-F-C-G입니다. I-IV-V-I: 가장 기본적인 안정 진행입니다. C-F-G-C입니다.",
+      },
+      {
+        title: "벌스에 쓰기 좋은 진행",
+        body: "I-vi-IV-V는 이야기를 시작하기 좋고 안정적입니다. vi-IV-I-V는 벌스에서 감정을 깔아두기 좋습니다. I-V-vi-iii-IV-I-IV-V는 길게 흐르는 팝 벌스에 좋습니다. I-iii-vi-IV는 담백하고 덜 뻔한 느낌을 줍니다. C 기준 예시는 C-Am-F-G, Am-F-C-G, C-G-Am-Em-F-C-F-G, C-Em-Am-F입니다.",
+      },
+      {
+        title: "프리코러스에 쓰기 좋은 진행",
+        body: "IV-V-vi는 코러스로 올라가기 전 기대감을 만듭니다. ii-V는 도미넌트로 밀어 올리는 힘이 강합니다. IV-V-iii-vi는 J-pop, K-pop에서 자주 들리는 상승감 있는 진행입니다. ii-iii-IV-V는 점점 올라가는 느낌이라 코러스 직전에 좋습니다. C 기준 F-G-Am, Dm-G, F-G-Em-Am, Dm-Em-F-G입니다.",
+      },
+      {
+        title: "코러스에 쓰기 좋은 진행",
+        body: "I-V-vi-IV는 가장 선명한 후렴 진행입니다. IV-I-V-vi는 시작을 IV로 해서 더 넓게 열리는 느낌을 줍니다. I-IV-vi-V는 밝고 직선적입니다. vi-IV-V-I는 마이너에서 시작해 메이저로 해결되는 감정이 좋습니다. C 기준 C-G-Am-F, F-C-G-Am, C-F-Am-G, Am-F-G-C입니다.",
+      },
+      {
+        title: "브릿지에 쓰기 좋은 진행",
+        body: "브릿지는 원래 반복되던 진행에서 벗어나는 구간입니다. bVI-bVII-I는 모달 인터체인지 느낌으로 강하게 돌아옵니다. iv-I는 메이저 곡에서 갑자기 서늘한 색을 줍니다. ii-V-iii-vi는 새 구간처럼 들리면서도 키 중심을 유지합니다. C 기준 Ab-Bb-C, Fm-C, Dm-G-Em-Am입니다.",
+      },
+      {
+        title: "발라드 진행",
+        body: "I-V/vi-vi-V-IV-iii-ii-V는 감정선이 길게 이어지는 발라드에 좋습니다. I-iii-IV-iv는 메이저에서 마이너 iv를 빌려와 애절합니다. vi-iii-IV-I는 차분한 벌스에 좋습니다. IV-V-iii-vi-ii-V-I는 후반부로 갈수록 감정이 쌓입니다. C 기준 C-E7-Am-G-F-Em-Dm-G, C-Em-F-Fm, Am-Em-F-C, F-G-Em-Am-Dm-G-C입니다.",
+      },
+      {
+        title: "마이너 키 진행",
+        body: "i-bVI-bVII-i는 록, 게임음악, 어두운 팝에 좋습니다. i-bVII-bVI-bVII는 반복감이 강하고 웅장합니다. i-iv-bVII-bIII는 자연단음계 색이 잘 납니다. i-bVI-III-bVII는 현대 팝 마이너 진행에서 자주 씁니다. A minor 기준 Am-F-G-Am, Am-G-F-G, Am-Dm-G-C, Am-F-C-G입니다.",
+      },
+      {
+        title: "록/밴드 진행",
+        body: "I-bVII-IV-I는 믹솔리디안 록 느낌입니다. i-bVII-bVI-V는 강한 마이너 록 진행입니다. I-V-bVII-IV는 개방적인 기타 리프에 좋습니다. I-IV-bVII-IV는 반복 리프형 진행에 잘 맞습니다. C 기준 C-Bb-F-C, Cm-Bb-Ab-G, C-G-Bb-F, C-F-Bb-F입니다.",
+      },
+      {
+        title: "재즈 기본 진행",
+        body: "ii-V-I는 재즈의 핵심입니다. C에서는 Dm7-G7-Cmaj7입니다. iii-VI-ii-V는 턴어라운드로 많이 씁니다. Em7-A7-Dm7-G7입니다. I-vi-ii-V는 오래된 스탠더드 진행에 많습니다. Cmaj7-Am7-Dm7-G7입니다. ii-V-I-vi는 반복 연습에 좋습니다. Dm7-G7-Cmaj7-Am7입니다.",
+      },
+      {
+        title: "R&B / 소울 진행",
+        body: "IVmaj7-iii7-vi7-ii7-V7는 부드러운 순환감이 있습니다. Imaj7-vi7-ii7-V7는 재즈 팝, R&B에 잘 맞습니다. ivm7-bVII7-Imaj7는 차용 코드로 부드럽게 해결됩니다. C 기준 Fmaj7-Em7-Am7-Dm7-G7, Cmaj7-Am7-Dm7-G7, Fm7-Bb7-Cmaj7입니다.",
+      },
+      {
+        title: "시티팝/J-pop 느낌",
+        body: "IV-V-iii-vi는 가장 대표적인 감성 진행 중 하나입니다. ii-V-iii-vi는 재즈 색이 조금 더 강합니다. IV-V-I-vi는 밝고 선명합니다. bVII-V7/vi-vi는 세컨더리 도미넌트로 감정이 깊어집니다. C 기준 F-G-Em-Am, Dm-G-Em-Am, F-G-C-Am, Bb-E7-Am입니다.",
+      },
+      {
+        title: "엔딩/마무리 진행",
+        body: "IV-V-I는 가장 단순하고 확실한 마무리입니다. ii-V-I는 재즈식 마침입니다. iv-I는 애절한 마지막 해결에 좋습니다. bVI-bVII-I는 웅장하게 끝낼 때 좋습니다. V-vi는 끝나는 척하다가 빗나가는 기만종지입니다. C 기준 F-G-C, Dm-G-C, Fm-C, Ab-Bb-C, G-Am입니다.",
+      },
+    ],
+  },
+  {
+    id: "subdominant",
+    title: "서브도미넌트",
+    subtitle: "진행을 앞으로 밀어주는 준비 기능",
+    summary: "서브도미넌트는 토닉의 안정감에서 벗어나 다음 코드로 이동하게 만드는 역할입니다. IV와 ii가 가장 기본입니다.",
+    keyPoints: [
+      "Major Key에서 IV와 ii는 대표적인 서브도미넌트입니다.",
+      "서브도미넌트는 도미넌트 앞에 오면 진행이 자연스럽습니다.",
+      "ii-V-I는 재즈와 팝에서 가장 중요한 기본 진행입니다.",
+      "IV-I는 강한 긴장 없이 부드럽게 돌아오는 느낌을 만듭니다.",
+    ],
+    exampleTitle: "C Major 예시",
+    examples: ["Dm7", "G7", "Cmaj7"],
+    detail: "Dm7은 C Major의 ii 코드입니다. G7으로 이어지면 도미넌트가 만들어지고, Cmaj7로 해결되면서 ii-V-I 진행이 됩니다.",
+    sections: [
+      {
+        title: "어디에 쓰나",
+        body: "토닉에서 바로 도미넌트로 가면 진행이 단순하게 들릴 수 있습니다. 그 사이에 ii나 IV를 넣으면 진행이 자연스럽게 앞으로 움직입니다.",
+      },
+      {
+        title: "대표 패턴",
+        body: "IV-V-I, ii-V-I, IV-I가 기본입니다. C Major에서는 F-G-C, Dm-G-C, F-C처럼 사용할 수 있습니다.",
+      },
+    ],
+  },
+  {
+    id: "secondaryDominant",
+    title: "세컨더리 도미넌트",
+    subtitle: "키 안의 다른 코드를 잠깐 목표로 삼는 V 코드",
+    summary: "세컨더리 도미넌트는 원래 키의 I이 아닌 다른 다이아토닉 코드를 잠깐 목표로 삼아 그 코드의 V를 빌려오는 방법입니다.",
+    keyPoints: [
+      "표기: V/V, V/ii, V/vi처럼 씁니다.",
+      "C Major에서 V/V는 G의 V인 D 또는 D7입니다.",
+      "해결 대상 코드 바로 앞에 놓으면 진행에 추진력이 생깁니다.",
+      "보통 도미넌트7 형태로 쓰면 성격이 더 분명해집니다.",
+    ],
+    exampleTitle: "C Major 예시",
+    examples: ["C", "D7", "G", "C"],
+    detail: "D7은 C Major 안의 다이아토닉 코드는 아니지만, G로 강하게 가고 싶게 만듭니다. 그래서 D7은 C Major에서 V/V로 볼 수 있습니다.",
+    sections: [
+      {
+        title: "무슨 키의 V를 가져오나",
+        body: "현재 키 안에 있는 다이아토닉 코드를 잠깐 목표 코드처럼 보고, 그 목표 코드가 I이라고 가정했을 때의 V 또는 V7을 가져옵니다. 예를 들어 C Major 안의 G를 목표로 삼으면, G Key의 V인 D7을 가져와 V/V로 씁니다.",
+      },
+      {
+        title: "C Major에서 자주 가능한 대상",
+        body: "ii(Dm), iii(Em), IV(F), V(G), vi(Am)를 목표로 삼는 경우가 많습니다. 그래서 A7→Dm은 V/ii, B7→Em은 V/iii, C7→F는 V/IV, D7→G는 V/V, E7→Am은 V/vi입니다.",
+      },
+      {
+        title: "찾는 순서",
+        body: "1. 목표 코드를 정합니다. 2. 그 목표 코드의 루트를 기준으로 완전5도 위 음을 찾습니다. 3. 그 음을 루트로 하는 메이저 코드나 7코드를 만듭니다. 4. 목표 코드 바로 앞에 놓아 해결시킵니다.",
+      },
+      {
+        title: "사용법",
+        body: "세컨더리 도미넌트는 보통 목표 코드 바로 앞에 둡니다. C-Am-Dm-G-C 진행에서 Dm을 더 강하게 부르고 싶으면 C-Am-A7-Dm-G-C처럼 A7을 넣을 수 있습니다.",
+      },
+      {
+        title: "주의할 점",
+        body: "세컨더리 도미넌트는 잠깐 밖으로 나가는 소리입니다. 너무 자주 쓰면 원래 키의 중심이 흐려질 수 있으니, 목표 코드로 바로 해결되게 쓰면 가장 안정적입니다.",
+      },
+    ],
+  },
+  {
+    id: "modalInterchange",
+    title: "모달 인터체인지",
+    subtitle: "같은 으뜸음의 다른 모드에서 코드를 빌려오기",
+    summary: "모달 인터체인지는 같은 루트의 다른 스케일이나 모드에서 코드를 빌려와 색채를 바꾸는 방법입니다.",
+    keyPoints: [
+      "C Major에서 C Minor 계열의 코드를 빌려오는 식으로 자주 씁니다.",
+      "대표 차용 코드: bIII, iv, bVI, bVII",
+      "Major 진행 안에 마이너 색을 넣고 싶을 때 효과적입니다.",
+      "빌린 코드 뒤에는 원래 키의 코드로 돌아오면 중심이 흐트러지지 않습니다.",
+    ],
+    exampleTitle: "C Major 예시",
+    examples: ["C", "Fm", "C", "Ab", "Bb", "C"],
+    detail: "Fm은 C Major 안에는 없지만 C Minor에서 빌려온 iv입니다. C에서 Fm으로 가면 밝은 메이저 안에 어두운 색이 순간적으로 생깁니다.",
+    sections: [
+      {
+        title: "어디서 빌려오나",
+        body: "같은 으뜸음의 다른 모드에서 빌려옵니다. C Major라면 C Minor, C Dorian, C Mixolydian 같은 C로 시작하는 모드에서 코드를 가져올 수 있습니다.",
+      },
+      {
+        title: "자주 쓰는 차용 코드",
+        body: "C Major 기준으로 Fm(iv), Ab(bVI), Bb(bVII), Eb(bIII), Db(bII)가 자주 쓰입니다. 특히 iv는 팝과 발라드에서 많이 들립니다.",
+      },
+    ],
+  },
+  {
+    id: "tensions",
+    title: "텐션",
+    subtitle: "7화음 위에 얹는 9, 11, 13 계열의 색채음",
+    summary: "텐션은 코드톤 위에 추가되는 색채음입니다. 9, 11, 13은 각각 2, 4, 6을 한 옥타브 위로 본 이름입니다.",
+    keyPoints: [
+      "9th = 2도, 11th = 4도, 13th = 6도",
+      "maj7에서는 9, #11, 13이 자주 어울립니다.",
+      "m7에서는 9, 11이 기본적으로 안정적입니다.",
+      "7코드에서는 b9, #9, #11, b13 같은 얼터드 텐션도 자주 씁니다.",
+    ],
+    exampleTitle: "C 기준",
+    examples: ["9 = D", "11 = F", "13 = A", "#11 = F#"],
+    detail: "텐션은 코드의 기본 성질을 유지하면서 색을 더합니다. 다만 멜로디와 부딪히는 음은 짧게 지나가거나 해결해 주는 식으로 다루면 자연스럽습니다.",
+    sections: [
+      {
+        title: "계산법",
+        body: "9, 11, 13은 각각 2, 4, 6을 한 옥타브 위로 부르는 이름입니다. C 기준 9는 D, 11은 F, 13은 A입니다.",
+      },
+      {
+        title: "코드별 기본 선택",
+        body: "maj7에는 9, #11, 13이 잘 어울리고, m7에는 9, 11이 안정적입니다. 7코드에는 b9, #9, #11, b13처럼 긴장감 있는 텐션을 자주 씁니다.",
+      },
+    ],
+  },
+  {
+    id: "substituteDominant",
+    title: "대리 도미넌트",
+    subtitle: "트라이톤을 공유하는 도미넌트7로 바꾸기",
+    summary: "대리 도미넌트는 원래 도미넌트7과 같은 트라이톤을 가진 다른 도미넌트7으로 바꾸는 방법입니다.",
+    keyPoints: [
+      "G7의 3음과 b7은 B와 F입니다.",
+      "Db7도 F와 Cb(B)를 가져서 G7과 비슷한 긴장을 만듭니다.",
+      "그래서 G7 대신 Db7을 쓰면 C로 반음 하행하는 베이스 진행이 생깁니다.",
+      "재즈, 보사노바, 세련된 팝 진행에서 자주 나옵니다.",
+    ],
+    exampleTitle: "C Major 예시",
+    examples: ["Dm7", "Db7", "Cmaj7"],
+    detail: "원래 ii-V-I는 Dm7-G7-Cmaj7입니다. 여기서 G7을 Db7로 바꾸면 Dm7-Db7-Cmaj7이 되고, 베이스가 D-Db-C로 부드럽게 내려갑니다.",
+  },
+  {
+    id: "cadence",
+    title: "종지",
+    subtitle: "프레이즈가 끝나는 느낌을 만드는 화성 마침표",
+    summary: "종지는 음악 문장이 어디서 쉬고 끝나는지 알려주는 화성적 마침표입니다.",
+    keyPoints: [
+      "정격종지: V-I. 가장 강한 해결감입니다.",
+      "변격종지: IV-I. 부드러운 마침 느낌입니다.",
+      "반종지: 어떤 코드에서 V로 멈춤. 아직 끝나지 않은 느낌입니다.",
+      "기만종지: V-vi. 해결할 것처럼 보이다가 살짝 빗나갑니다.",
+    ],
+    exampleTitle: "C Major 예시",
+    examples: ["G-C", "F-C", "C-G", "G-Am"],
+    detail: "종지를 알면 코드 진행의 문장 구조가 보입니다. 멜로디가 끝나는 위치와 종지가 만나면 곡의 구성이 더 또렷하게 들립니다.",
+  },
+];
+
 const harmonyQuestions = [
   {
     level: "easy",
@@ -990,7 +1241,7 @@ function saveSettings() {
     earMode: els.earMode.value,
     earDifficulty: els.earDifficulty.value,
     earNoteSet: els.earNoteSet.value,
-    chartScale: els.chartScale.value,
+    theoryTopic: els.chartScale.value,
     chordRoot: els.chordRootSelect.value,
     chordBpm: els.chordBpmInput.value,
     chordUnit: els.chordUnitSelect.value,
@@ -1020,7 +1271,10 @@ function applySettings() {
   if (settings.earMode) els.earMode.value = settings.earMode;
   if (settings.earDifficulty) els.earDifficulty.value = settings.earDifficulty;
   if (settings.earNoteSet) els.earNoteSet.value = settings.earNoteSet;
-  if (settings.chartScale) els.chartScale.value = settings.chartScale;
+  if (settings.theoryTopic) els.chartScale.value = settings.theoryTopic;
+  if (!settings.theoryTopic && settings.chartScale && theoryTopics.some((topic) => topic.id === settings.chartScale)) {
+    els.chartScale.value = settings.chartScale;
+  }
   if (settings.chordRoot) els.chordRootSelect.value = settings.chordRoot;
   if (settings.chordBpm) els.chordBpmInput.value = settings.chordBpm;
   if (settings.chordUnit) els.chordUnitSelect.value = settings.chordUnit;
@@ -1092,9 +1346,10 @@ function clearReviewItems() {
 function populateSelects() {
   scaleTypes.forEach((scale) => {
     const quizOption = new Option(`${scale.name} (${scale.korean})`, scale.id);
-    const chartOption = new Option(`${scale.name} (${scale.korean})`, scale.id);
     els.quizScale.add(quizOption);
-    els.chartScale.add(chartOption);
+  });
+  theoryTopics.forEach((topic) => {
+    els.chartScale.add(new Option(topic.title, topic.id));
   });
 }
 
@@ -1347,34 +1602,59 @@ function updateAccuracy() {
   els.accuracy.textContent = `${accuracy}%`;
 }
 
+function getTheoryTopicById(id) {
+  return theoryTopics.find((topic) => topic.id === id) || theoryTopics[0];
+}
+
 function renderScaleChart() {
-  const scale = getScaleById(els.chartScale.value);
+  const topic = getTheoryTopicById(els.chartScale.value);
   els.scaleInfo.innerHTML = `
     <article class="info-box">
-      <span>구조</span>
-      <strong>${scale.name}</strong>
-      <p>${scale.korean}<br>${scale.formula}<br>${scale.degrees.join(" - ")}</p>
+      <span>개념</span>
+      <strong>${topic.title}</strong>
+      <p>${topic.subtitle}<br>${topic.summary}</p>
     </article>
     <article class="info-box">
-      <span>사용법</span>
-      <strong>어떻게 쓰나</strong>
-      <p>${scale.structure}<br>${scale.use}</p>
+      <span>예시</span>
+      <strong>${topic.exampleTitle}</strong>
+      <p>${topic.detail}</p>
     </article>
   `;
 
   els.scaleChart.innerHTML = "";
-  rootsCircle.forEach((root, index) => {
-    const notes = buildScale(root, scale);
-    const row = document.createElement("article");
-    row.className = "scale-row";
-    row.innerHTML = `
+  const pointCard = document.createElement("article");
+  pointCard.className = "scale-row theory-card";
+  pointCard.innerHTML = `
+    <div class="scale-row-head">
+      <h3>핵심 정리</h3>
+      <span class="badge">Theory</span>
+    </div>
+    <ul class="theory-points">${topic.keyPoints.map((point) => `<li>${point}</li>`).join("")}</ul>
+  `;
+  els.scaleChart.append(pointCard);
+
+  const exampleCard = document.createElement("article");
+  exampleCard.className = "scale-row theory-card";
+  exampleCard.innerHTML = `
       <div class="scale-row-head">
-        <h3>${root} ${scale.name}</h3>
+        <h3>${topic.exampleTitle}</h3>
+        <span class="badge">Example</span>
+      </div>
+      <div class="notes">${topic.examples.map((example) => `<span class="note theory-note">${example}</span>`).join("")}</div>
+  `;
+  els.scaleChart.append(exampleCard);
+
+  (topic.sections || []).forEach((section, index) => {
+    const sectionCard = document.createElement("article");
+    sectionCard.className = "scale-row theory-card theory-section-card";
+    sectionCard.innerHTML = `
+      <div class="scale-row-head">
+        <h3>${section.title}</h3>
         <span class="badge">${index + 1}</span>
       </div>
-      <div class="notes">${notes.map((note) => `<span class="note">${note}</span>`).join("")}</div>
+      <p class="theory-section-text">${section.body}</p>
     `;
-    els.scaleChart.append(row);
+    els.scaleChart.append(sectionCard);
   });
 }
 
@@ -1402,10 +1682,103 @@ function renderCircle() {
   });
 }
 
+const chordToneQuestionTypes = [
+  { level: "easy", suffix: "", name: "메이저", tones: [{ label: "3음", interval: 4 }, { label: "5음", interval: 7 }] },
+  { level: "easy", suffix: "m", name: "마이너", tones: [{ label: "b3음", interval: 3 }, { label: "5음", interval: 7 }] },
+  { level: "normal", suffix: "7", name: "도미넌트7", tones: [{ label: "3음", interval: 4 }, { label: "5음", interval: 7 }, { label: "b7음", interval: 10 }] },
+  { level: "normal", suffix: "maj7", name: "메이저7", tones: [{ label: "3음", interval: 4 }, { label: "5음", interval: 7 }, { label: "7음", interval: 11 }] },
+  { level: "normal", suffix: "m7", name: "마이너7", tones: [{ label: "b3음", interval: 3 }, { label: "5음", interval: 7 }, { label: "b7음", interval: 10 }] },
+  { level: "hard", suffix: "m7b5", name: "하프 디미니쉬", tones: [{ label: "b3음", interval: 3 }, { label: "b5음", interval: 6 }, { label: "b7음", interval: 10 }] },
+  { level: "hard", suffix: "7b9", name: "도미넌트7 b9", tones: [{ label: "3음", interval: 4 }, { label: "b7음", interval: 10 }, { label: "b9음", interval: 13 }] },
+  { level: "hard", suffix: "7#9", name: "도미넌트7 #9", tones: [{ label: "3음", interval: 4 }, { label: "b7음", interval: 10 }, { label: "#9음", interval: 15 }] },
+];
+
+const majorDiatonicTriads = [
+  { roman: "I", quality: "", level: "easy" },
+  { roman: "ii", quality: "m", level: "normal" },
+  { roman: "iii", quality: "m", level: "normal" },
+  { roman: "IV", quality: "", level: "easy" },
+  { roman: "V", quality: "", level: "easy" },
+  { roman: "vi", quality: "m", level: "easy" },
+  { roman: "vii°", quality: "dim", level: "hard" },
+];
+
+const minorDiatonicTriads = [
+  { roman: "i", quality: "m", level: "easy" },
+  { roman: "ii°", quality: "dim", level: "hard" },
+  { roman: "III", quality: "", level: "normal" },
+  { roman: "iv", quality: "m", level: "normal" },
+  { roman: "v", quality: "m", level: "easy" },
+  { roman: "VI", quality: "", level: "normal" },
+  { roman: "VII", quality: "", level: "normal" },
+];
+
+function chordToneChoices(root, correct, intervals) {
+  const rootSemitone = semitoneOf(root);
+  const pool = [...new Set([
+    correct,
+    ...intervals.map((interval) => noteFromSemitone(rootSemitone + interval, root)),
+    ...[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((interval) => noteFromSemitone(rootSemitone + interval, root)),
+  ])].filter(Boolean);
+  return [correct, ...pool.filter((note) => note !== correct).slice(0, 3)];
+}
+
+function buildChordToneQuestions() {
+  const roots = ["C", "D", "E", "F", "G", "A", "Bb", "B", "C#", "F#"];
+  return roots.flatMap((root) => chordToneQuestionTypes.flatMap((type) => type.tones.map((tone) => {
+    const intervals = type.tones.map((item) => item.interval);
+    const correct = noteFromSemitone(semitoneOf(root) + tone.interval, root);
+    return {
+      level: type.level,
+      topic: "코드톤",
+      prompt: `${root}${type.suffix}의 ${tone.label}은 무엇인가요?`,
+      answers: chordToneChoices(root, correct, intervals),
+      correct,
+      explain: `${root}${type.suffix}는 ${type.name} 코드입니다. ${tone.label}은 ${correct}입니다.`,
+    };
+  })));
+}
+
+function buildDiatonicQuestions() {
+  const majorKeys = ["C", "G", "D", "A", "E", "F", "Bb", "Eb"];
+  const minorKeys = ["A", "E", "B", "D", "G", "C"];
+  const majorScale = getScaleById("major");
+  const minorScale = getScaleById("naturalMinor");
+  const majorQuestions = majorKeys.flatMap((key) => {
+    const scaleNotes = buildScale(key, majorScale).slice(0, -1);
+    const chords = scaleNotes.map((note, index) => `${note}${majorDiatonicTriads[index].quality}`);
+    return majorDiatonicTriads.map((degree, index) => ({
+      level: degree.level,
+      topic: "다이아토닉",
+      prompt: `${key} Major의 ${degree.roman} 코드는 무엇인가요?`,
+      answers: [chords[index], ...chords.filter((chord) => chord !== chords[index]).slice(0, 3)],
+      correct: chords[index],
+      explain: `${key} Major의 ${degree.roman}는 ${scaleNotes[index]}에서 시작하므로 ${chords[index]}입니다.`,
+    }));
+  });
+  const minorQuestions = minorKeys.flatMap((key) => {
+    const scaleNotes = buildScale(key, minorScale).slice(0, -1);
+    const chords = scaleNotes.map((note, index) => `${note}${minorDiatonicTriads[index].quality}`);
+    return minorDiatonicTriads.map((degree, index) => ({
+      level: degree.level,
+      topic: "다이아토닉",
+      prompt: `${key} Natural Minor의 ${degree.roman} 코드는 무엇인가요?`,
+      answers: [chords[index], ...chords.filter((chord) => chord !== chords[index]).slice(0, 3)],
+      correct: chords[index],
+      explain: `${key} Natural Minor의 ${degree.roman}는 ${scaleNotes[index]}에서 시작하므로 ${chords[index]}입니다.`,
+    }));
+  });
+  return [...majorQuestions, ...minorQuestions];
+}
+
+function buildHarmonyQuestionPool() {
+  return [...harmonyQuestions, ...buildChordToneQuestions(), ...buildDiatonicQuestions()];
+}
+
 function buildHarmonyDeck() {
   clearAutoAdvance();
   const difficulty = els.harmonyDifficulty.value;
-  state.harmonyDeck = harmonyQuestions.filter((item) => difficulty === "all" || item.level === difficulty);
+  state.harmonyDeck = buildHarmonyQuestionPool().filter((item) => difficulty === "all" || item.level === difficulty);
   state.harmonyCount = 0;
   state.harmonyRecent = [];
   renderHarmonyQuestion();
